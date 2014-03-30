@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
  * Created by Admin on 27.03.2014.
  */
 public class WithdrawCommand implements Command {
-	private static String name = "Withdraw";
 	@Override
 	public void execute() {
 		try {
@@ -37,11 +36,8 @@ public class WithdrawCommand implements Command {
 		}
 	}
 
-	public static String getName() {
-		return name;
-	}
 	@Override
 	public void printCommandInfo() {
-		System.out.println(name);
+		System.out.println("Withdraw");
 	}
 }

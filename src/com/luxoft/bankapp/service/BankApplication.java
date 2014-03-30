@@ -28,7 +28,10 @@ public class BankApplication {
         Bank bank = new Bank("Luxoft bank", listenersArray);*/
 		Bank bank = new Bank("Luxoft Bank");
 
+
         initialize(bank);
+
+		BankReport.getClientsSorted(bank);
 
 		for (String arg : args)
 			if (arg.equals("-report")) {

@@ -28,35 +28,30 @@ public class BankReport {
 	}
 
 	public static void getClientsSorted(Bank bank) {
-		Map<Float, Client> result = new TreeMap<Float, Client>(new Comparator<Float>() {
+		Set<Client> result = new TreeSet<>(new Comparator<Client>() {
 			@Override
-			public int compare(Float o1, Float o2) {
-				if (o1.floatValue() > o2.floatValue())
+			public int compare(Client o1, Client o2) {
+				if (o1.getBalance() > o2.getBalance()) {
 					return 1;
-				else if (o1.floatValue() < o2.floatValue())
+				} else if (o1.getBalance() < o2.getBalance()) {
 					return -1;
-				else
+				} else
 					return 0;
 			}
 		});
-		for (Client client : bank.getClients()) {
-			result.put(client.getActiveAccount().getBalance(), client);
-		}
-		System.out.println("Clients sorted by their balance");
-		for (Map.Entry entry : result.entrySet())
-			System.out.println(entry.getValue() + "\n");
+		result.addAll(bank.getClients());
+		System.out.println(result);
 	}
 
 	public static void getBankCreditSum(Bank bank) {
 		int sum = 0;
 		for (Client client : bank.getClients()) {
 			for (Account acc : client.getAccounts()) {
-				//TODO Make enum account types
-				if (acc.getAccountType(acc).equals("Checking account"))
-					sum += ((CheckingAccount)acc).getOverdraft();
+				if (acc.getBalance() < 0)
+					sum -= acc.getBalance();
 			}
 		}
-		System.out.println("Total overdraft sum: " + sum);
+		System.out.println("Total bank credit sum: " + sum);
 	}
 
 	public static void getClientsByCity(Bank bank) {
@@ -68,7 +63,7 @@ public class BankReport {
 		});
 
 		for (Client client : bank.getClients()) {
-			if (result.get(client.getCity()) == null) {
+			if (!result.containsKey(client.getCity())) {
 				result.put(client.getCity(), new ArrayList<Client>());
 			}
 			result.get(client.getCity()).add(client);

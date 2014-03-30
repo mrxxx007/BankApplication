@@ -10,7 +10,6 @@ import com.luxoft.bankapp.service.BankServiceImpl;
  * Created by Admin on 27.03.2014.
  */
 public class GetAccountsCommand implements Command {
-	private static String name = "Get Accounts";
 	@Override
 	public void execute() {
 		try {
@@ -34,11 +33,8 @@ public class GetAccountsCommand implements Command {
 		}
 	}
 
-	public static String getName() {
-		return name;
-	}
 	@Override
 	public void printCommandInfo() {
-		System.out.println(name);
+		System.out.println("Get Accounts");
 	}
 }

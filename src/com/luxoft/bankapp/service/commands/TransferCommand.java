@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
  * Created by Admin on 27.03.2014.
  */
 public class TransferCommand implements Command {
-	private static String name = "Transfer";
 	@Override
 	public void execute() {
 		InputStreamReader streamReader = new InputStreamReader(System.in);
@@ -51,11 +50,8 @@ public class TransferCommand implements Command {
 		}
 	}
 
-	public static String getName() {
-		return name;
-	}
 	@Override
 	public void printCommandInfo() {
-		System.out.println(name);
+		System.out.println("Transfer");
 	}
 }

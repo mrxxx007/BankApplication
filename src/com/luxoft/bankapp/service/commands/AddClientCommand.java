@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
  * Created by Admin on 27.03.2014.
  */
 public class AddClientCommand implements Command {
-	private static String name = "Add Client";
 	@Override
 	public void execute() throws IOException {
 		boolean isMale;
@@ -88,11 +87,7 @@ public class AddClientCommand implements Command {
 
 	@Override
 	public void printCommandInfo() {
-		System.out.println(name);
-	}
-
-	public static String getName() {
-		return name;
+		System.out.println("Add Client");
 	}
 
 	private boolean isValidPhone(String phone){

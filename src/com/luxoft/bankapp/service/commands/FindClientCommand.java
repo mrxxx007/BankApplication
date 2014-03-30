@@ -13,7 +13,6 @@ import java.util.List;
  * Created by Sergey Popov on 27.03.2014.
  */
 public class FindClientCommand implements Command {
-	private static String name = "Find Client";
 
 	@Override
 	public void execute() {
@@ -37,11 +36,8 @@ public class FindClientCommand implements Command {
 		}
 	}
 
-	public static String getName() {
-		return name;
-	}
 	@Override
 	public void printCommandInfo() {
-		System.out.println(name);
+		System.out.println("Find Client");
 	}
 }
