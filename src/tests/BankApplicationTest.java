@@ -38,6 +38,7 @@ public class BankApplicationTest {
 		client3.getAccounts().add(new SavingAccount(600));
 		client3.getAccounts().add(new CheckingAccount(1000));
 		((CheckingAccount) client3.getAccounts().get(1)).setOverdraft(100f);
+
 	}
 
 	@Test
@@ -46,6 +47,8 @@ public class BankApplicationTest {
 		assertFalse(client1 == client2);
 		assertFalse(client1.equals(client3));
 	}
+	
+	//add test comment
 
 	/*@Test
 	public void testClientHashCode() {
