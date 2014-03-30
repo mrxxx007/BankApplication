@@ -48,7 +48,7 @@ public class BankApplicationTest {
 		assertFalse(client1.equals(client3));
 	}
 	
-	//add test comment
+	//add test comment 2
 
 	/*@Test
 	public void testClientHashCode() {
