@@ -2,11 +2,14 @@ package com.luxoft.bankapp.model; /**
  * Created by user on 3/25/2014.
  */
 import com.luxoft.bankapp.exceptions.DataVerifyException;
+import com.luxoft.bankapp.exceptions.FeedException;
 import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.sun.org.apache.xpath.internal.operations.Equals;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Client implements Report {
     private String name;
@@ -31,19 +34,36 @@ public class Client implements Report {
 	}
 
 
+	/**
+	 * This method finds account by its type or create a new one
+	 */
+	private Account getAccount(String accountType) {
+		for (Account acc: accounts) {
+			if (acc.getAccountType().equals(accountType)) {
+				return acc;
+			}
+		}
+		return createAccount(accountType);
+	}
+
+	/**
+	 * This method creates account by its type
+	 */
+	private Account createAccount(String accountType) {
+		Account acc;
+		if ("s".equals(accountType)) {
+			acc = new SavingAccount();
+		} else if ("c".equals(accountType)) {
+			acc = new CheckingAccount();
+		} else {
+			throw new FeedException("Account type not found "+accountType);
+		}
+		accounts.add(acc);
+		return acc;
+	}
 
     @Override
     public void printReport() {
-//        System.out.println("Client: " + getClientSalutation() + name);
-//        System.out.println("\nActive account: ");
-//        if (activeAccount == null)
-//            System.out.println("  - not found");
-//        else
-//            activeAccount.printReport();
-//        System.out.println("\nAll accounts: ");
-//        for (Account acc : accounts)
-//            acc.printReport();
-//        System.out.println("=========================\n");
 		System.out.println(this);
 	}
 
@@ -105,6 +125,20 @@ public class Client implements Report {
 	}
 	public void setCity(String city) {
 		this.city = city;
+	}
+
+
+
+	public void parseFeed(Map<String, String> feed) {
+		String accountType = feed.get("accounttype");
+		Account acc = getAccount(accountType);
+
+		/**
+		 * This method should read all account info from the feed.
+		 * There will be different implementations for
+		 * CheckingAccount and SavingAccount.
+		 */
+		acc.parseFeed(feed);
 	}
 
 	@Override

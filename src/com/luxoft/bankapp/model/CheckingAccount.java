@@ -2,13 +2,22 @@ package com.luxoft.bankapp.model;
 
 import com.luxoft.bankapp.exceptions.OverDraftLimitExceededException;
 
+import java.io.Serializable;
+import java.util.Map;
+
 /**
  * Created by Sergey Popov on 3/25/2014.
  */
 public class CheckingAccount extends AbstractAccount {
     private float overdraft;
+	private String accountType = "c";
 
-    public CheckingAccount() {
+	@Override
+	public String getAccountType() {
+		return accountType;
+	}
+
+	public CheckingAccount() {
         balance = 0f;
 		id = ++accountsAmt;
     }
@@ -27,7 +36,17 @@ public class CheckingAccount extends AbstractAccount {
 		return overdraft;
 	}
 
-    @Override
+	@Override
+	public void parseFeed(Map<String, String> feed) {
+		try {
+			balance = Float.parseFloat(feed.get("balance"));
+			overdraft = Float.parseFloat(feed.get("overdraft"));
+		} catch (NumberFormatException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	@Override
     public void printReport() {
         System.out.println("  - " + this.getClass().getName());
         System.out.println("    Balance: " + balance);

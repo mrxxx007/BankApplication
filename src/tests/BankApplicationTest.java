@@ -42,29 +42,13 @@ public class BankApplicationTest {
 	}
 
 	@Test
-	public void testClientEquals() {
-		assertTrue(client1.equals(client2));
-		assertFalse(client1 == client2);
-		assertFalse(client1.equals(client3));
-	}
-	
-	//add test comment 2
+	public void testAccountTypesEnum() {
+		AccountType accType1 = AccountType.valueOf("c");
+		AccountType accType2 = AccountType.valueOf("Saving Account");
 
-	/*@Test
-	public void testClientHashCode() {
-		assertTrue(client1.hashCode() > 0);
-		assertTrue(client1.hashCode() == client2.hashCode());
-		assertFalse(client2.hashCode() == client3.hashCode());
-	}*/
+		System.out.println(accType1.fullName);
+		System.out.println(accType2.shortName);
 
-	@Test
-	public void testAccountsEquals() {
-		// Saving accounts
-		assertTrue(client1.getAccounts().get(0).equals(client2.getAccounts().get(0)));
-		assertFalse(client1.getAccounts().get(0).equals(client3.getAccounts().get(0)));
 
-		// Checking accounts
-		assertTrue(client1.getAccounts().get(1).equals(client2.getAccounts().get(1)));
-		assertFalse(client1.getAccounts().get(1).equals(client3.getAccounts().get(1)));
 	}
 }

@@ -2,14 +2,18 @@ package com.luxoft.bankapp.model;
 
 import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 
+import java.io.Serializable;
+import java.util.Map;
+
 /**
- * Created by user on 3/25/2014.
+ * Created by Sergey Popov on 3/25/2014.
  */
 public interface Account extends Report {
     float getBalance();
     void deposit(float x);
     void withdraw(float x) throws NoEnoughFundsException;
 	int decimalValue();
-	String getAccountType(Account acc);
+	String getAccountType();
+	void parseFeed(Map<String, String> feed);
 }
 

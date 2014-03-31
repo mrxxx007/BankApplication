@@ -2,7 +2,6 @@ package com.luxoft.bankapp.service;
 
 import com.luxoft.bankapp.model.Account;
 import com.luxoft.bankapp.model.Bank;
-import com.luxoft.bankapp.model.CheckingAccount;
 import com.luxoft.bankapp.model.Client;
 
 import java.util.*;
@@ -13,13 +12,13 @@ import java.util.*;
 public class BankReport {
 	public static void getNumberOfClients(Bank bank) {
 		System.out.println("Number of clients: " +
-				bank.getClients().size());
+				bank.getClientsList().size());
 		//return 0;
 	}
 
 	public static void getAccountsNumber(Bank bank) {
 		int count = 0;
-		for (Client client : bank.getClients()) {
+		for (Client client : bank.getClientsList()) {
 			for (Account acc : client.getAccounts()) {
 				count++;
 			}
@@ -31,21 +30,16 @@ public class BankReport {
 		Set<Client> result = new TreeSet<>(new Comparator<Client>() {
 			@Override
 			public int compare(Client o1, Client o2) {
-				if (o1.getBalance() > o2.getBalance()) {
-					return 1;
-				} else if (o1.getBalance() < o2.getBalance()) {
-					return -1;
-				} else
-					return 0;
+				return (int)(o1.getBalance() - o2.getBalance());
 			}
 		});
-		result.addAll(bank.getClients());
+		result.addAll(bank.getClientsList());
 		System.out.println(result);
 	}
 
 	public static void getBankCreditSum(Bank bank) {
 		int sum = 0;
-		for (Client client : bank.getClients()) {
+		for (Client client : bank.getClientsList()) {
 			for (Account acc : client.getAccounts()) {
 				if (acc.getBalance() < 0)
 					sum -= acc.getBalance();
@@ -55,14 +49,15 @@ public class BankReport {
 	}
 
 	public static void getClientsByCity(Bank bank) {
-		Map<String, List<Client>> result = new TreeMap<String, List<Client>>(new Comparator<String>() {
+		Map<String, List<Client>> result =
+				new TreeMap<String, List<Client>>(new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {
 				return (o1.compareTo(o2));
 			}
 		});
 
-		for (Client client : bank.getClients()) {
+		for (Client client : bank.getClientsList()) {
 			if (!result.containsKey(client.getCity())) {
 				result.put(client.getCity(), new ArrayList<Client>());
 			}

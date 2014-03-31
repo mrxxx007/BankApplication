@@ -26,7 +26,7 @@ public class GetAccountsCommand implements Command {
 		for (Account acc : BankCommander.activeClient.getAccounts())
 		{
 			System.out.println("Account #" + ++i);
-			System.out.println("  Type: " + acc.getAccountType(acc));
+			System.out.println("  Type: " + new BankServiceImpl().getAccountTypeName(acc));
 			System.out.println("  Balance: " + acc.getBalance());
 			if(acc.getClass().getName().equals(CheckingAccount.class.getName()))
 				System.out.println("  Overdraft: " + ((CheckingAccount)acc).getOverdraft());

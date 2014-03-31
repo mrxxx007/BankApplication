@@ -10,7 +10,9 @@ public interface BankService {
     void addAccount(Client client, Account account);
     void setActiveAccount(Client client, Account account);
 	Client getClient(Bank bank, String clientName);
-	String getAccountType(Account account);
+	String getAccountTypeName(Account account);
+	void saveClient(Client client);
+	Client loadClient();
 
 
 }

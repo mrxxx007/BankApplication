@@ -6,7 +6,6 @@ import com.luxoft.bankapp.service.commands.BankCommander;
 import com.luxoft.bankapp.service.commands.Command;
 
 import java.io.IOException;
-import java.util.Date;
 
 /**
  * Created by user on 3/25/2014.
@@ -31,7 +30,9 @@ public class BankApplication {
 
         initialize(bank);
 
-		BankReport.getClientsSorted(bank);
+		// Loading info about clients from feed file
+		BankFeedService.loadFeed(bank, "data/feed.data");
+
 
 		for (String arg : args)
 			if (arg.equals("-report")) {
@@ -75,6 +76,8 @@ public class BankApplication {
         bankService.addAccount(client1, new SavingAccount(700));
 		bankService.setActiveAccount(client1, client1.getAccounts().get(0));
 
+		//test serializable
+		new BankServiceImpl().saveClient(client1);
 
         Client client2 = new Client();
         client2.setName("Petrova S.P.");
@@ -91,11 +94,11 @@ public class BankApplication {
 
     public static void modifyBank(Bank bank) {
 
-        bank.getClients().get(0).getAccounts().get(0).deposit(100);
-		((CheckingAccount) bank.getClients().get(0).getAccounts().get(0)).setOverdraft(300f);
+        bank.getClientsList().get(0).getAccounts().get(0).deposit(100);
+		((CheckingAccount) bank.getClientsList().get(0).getAccounts().get(0)).setOverdraft(300f);
 		try {
-			//bank.getClients().get(0).getAccounts().get(1).withdraw(5000);
-			bank.getClients().get(0).getAccounts().get(0).withdraw(1500);
+			//bank.getClientsList().get(0).getAccounts().get(1).withdraw(5000);
+			bank.getClientsList().get(0).getAccounts().get(0).withdraw(1500);
 		}
 		catch (OverDraftLimitExceededException ex) {
 			System.out.println("== !\n== ERROR: You haven't enough money");
@@ -104,7 +107,7 @@ public class BankApplication {
 		catch (NoEnoughFundsException ex) {
 			System.out.println("== !\n== ERROR: You haven't enough money\n");
 		}
-		//bank.getClients().get(1).getAccounts().get(0).withdraw(200);
+		//bank.getClientsList().get(1).getAccounts().get(0).withdraw(200);
 
     }
 

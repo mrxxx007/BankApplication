@@ -2,11 +2,16 @@ package com.luxoft.bankapp.model;
 
 import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 
+import java.io.Serializable;
+import java.util.Map;
+
 /**
  * Created by Sergey Popov on 3/25/2014.
  */
 public class SavingAccount extends AbstractAccount {
-    public SavingAccount() {
+	private String accountType = "s";
+
+	public SavingAccount() {
         balance = 0f;
 		id = ++accountsAmt;
     }
@@ -14,6 +19,20 @@ public class SavingAccount extends AbstractAccount {
         this.balance = balance;
 		id = ++accountsAmt;
     }
+
+	@Override
+	public void parseFeed(Map<String, String> feed) {
+		try {
+			balance = Float.parseFloat(feed.get("balance"));
+		} catch (NumberFormatException e) {
+			System.out.println(e.getMessage());
+		}
+	}
+
+	@Override
+	public String getAccountType() {
+		return accountType;
+	}
 
     @Override
     public void printReport() {
@@ -24,10 +43,12 @@ public class SavingAccount extends AbstractAccount {
 
     @Override
     public void withdraw(float x) throws NoEnoughFundsException {
-        if (x < 0)
-            throw new IllegalArgumentException();
-        if (balance < x)
-            throw new NoEnoughFundsException();
+        if (x < 0) {
+			throw new IllegalArgumentException();
+		}
+        if (balance < x) {
+			throw new NoEnoughFundsException();
+		}
         balance -= x;
     }
 

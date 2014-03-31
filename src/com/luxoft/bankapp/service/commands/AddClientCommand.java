@@ -21,8 +21,6 @@ public class AddClientCommand implements Command {
 
 		System.out.println("   Adding new client\n");
 		try {
-
-
 			System.out.print("Enter full name:\n -> ");
 			String userName = bufferedReader.readLine();
 			if (!isValidName(userName)) {
@@ -33,14 +31,11 @@ public class AddClientCommand implements Command {
 			float initOverdraft = Float.parseFloat(bufferedReader.readLine());
 
 			System.out.print("Enter client gender (male/female):\n -> ");
-			String gender = bufferedReader.readLine().toUpperCase();
-			if (gender.equals("MALE")) {
-				isMale = true;
-			}
-			else if (gender.equals("FEMALE")) {
-				isMale = false;
-			}
-			else {
+			String sgender = bufferedReader.readLine().toUpperCase();
+			Gender gender;
+			try {
+				gender = Gender.valueOf(sgender);
+			} catch (IllegalArgumentException ex) {
 				throw new DataVerifyException("Incorrect gender information");
 			}
 
@@ -66,7 +61,7 @@ public class AddClientCommand implements Command {
 
 			Client client = new Client(userName, initOverdraft);
 			client.setPhone(phoneNumber);
-			client.setGender(isMale ? Gender.MALE : Gender.FEMALE);
+			client.setGender(gender);
 			client.setEmail(userEmail);
 			client.addAccount(acc);
 			client.setActiveAccount(acc);

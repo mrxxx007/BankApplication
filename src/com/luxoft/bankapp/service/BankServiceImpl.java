@@ -3,6 +3,10 @@ package com.luxoft.bankapp.service;
 import com.luxoft.bankapp.exceptions.ClientExistsException;
 import com.luxoft.bankapp.model.*;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 /**
  * Created by user on 3/25/2014.
  */
@@ -15,7 +19,7 @@ public class BankServiceImpl implements BankService {
     }
     @Override
     public void removeClient(Bank bank, Client client) {
-        bank.getClients().remove(client);
+        bank.getClientsList().remove(client);
     }
     @Override
     public  void addAccount(Client client, Account acc) {
@@ -27,11 +31,29 @@ public class BankServiceImpl implements BankService {
     }
 
 	@Override
-	public String getAccountType(Account account) {
+	public String getAccountTypeName(Account account) {
 		if (account.getClass().getName().equals(CheckingAccount.class.getName()))
 			return "Checking account";
 		else
 			return "Saving account";
+	}
+
+	@Override
+	public void saveClient(Client client) {
+		try {
+			ObjectOutputStream output = new ObjectOutputStream(new
+					FileOutputStream("data/client.obj"));
+			output.writeObject(client);
+			output.close();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public Client loadClient() {
+		return null;
 	}
 
 	@Override

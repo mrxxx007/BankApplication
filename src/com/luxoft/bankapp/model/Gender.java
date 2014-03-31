@@ -14,5 +14,6 @@ public enum Gender {
     public String getSalut() {
         return gender;
     }
+
 }
 

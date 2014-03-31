@@ -2,10 +2,12 @@ package com.luxoft.bankapp.model;
 
 import com.luxoft.bankapp.model.Account;
 
+import java.io.Serializable;
+
 /**
  * Created by Sergey Popov on 3/25/2014.
  */
-public abstract class AbstractAccount implements Account {
+public abstract class AbstractAccount implements Account, Serializable {
     protected static int accountsAmt;
 	protected int id;
 	protected float balance;
@@ -32,12 +34,12 @@ public abstract class AbstractAccount implements Account {
 		return 31 * id;
 	}
 
-	@Override
+	/*@Override
 	public String getAccountType(Account account) {
 		if (account.getClass().getName().equals(CheckingAccount.class.getName()))
 			return "Checking account";
 		else
 			return "Saving account";
-	}
+	}*/
 }
 

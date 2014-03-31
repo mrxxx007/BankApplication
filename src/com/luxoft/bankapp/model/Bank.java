@@ -1,10 +1,8 @@
 package com.luxoft.bankapp.model;
 
 import com.luxoft.bankapp.exceptions.ClientExistsException;
-import com.luxoft.bankapp.exceptions.NotFoundException;
 import com.luxoft.bankapp.service.BankReport;
 import com.luxoft.bankapp.service.ClientRegistrationListener;
-import com.luxoft.bankapp.service.commands.BankCommander;
 
 import java.util.*;
 
@@ -13,8 +11,8 @@ import java.util.*;
  */
 public class Bank implements Report {
     private String name;
-    private List<Client> clients = new ArrayList<Client>();
-	private Map<String, Client> mapClients = new HashMap<String, Client>();
+    private List<Client> clientsList = new ArrayList<Client>();
+	private Map<String, Client> clients = new HashMap<String, Client>();
 
     List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();
 
@@ -24,7 +22,7 @@ public class Bank implements Report {
 		registerListener(new ClientRegistrationListener() {
 			@Override
 			public void onClientAdded(Client c) {
-				mapClients.put(c.getName(), c);
+				clients.put(c.getName(), c);
 			}
 		});
         //registerListener(new PrintClientListener());
@@ -58,7 +56,7 @@ public class Bank implements Report {
     public void printReport() {
         System.out.print("Report for ");
         System.out.println(name);
-        for (Client c : clients)
+        for (Client c : clientsList)
             c.printReport();
 		System.out.println("---------------------");
 
@@ -67,17 +65,19 @@ public class Bank implements Report {
 		BankReport.getBankCreditSum(this);
 	}
 
-    public List<Client> getClients() {
-        return Collections.unmodifiableList(clients);
+    public List<Client> getClientsList() {
+        return Collections.unmodifiableList(clientsList);
+
     }
 
 	public void addClient(Client client) throws ClientExistsException {
-		if (clients.contains(client))
+		if (clientsList.contains(client))
 			throw new ClientExistsException();
-		clients.add(client);
+		clientsList.add(client);
 
 		for (ClientRegistrationListener listener : listeners)
             listener.onClientAdded(client);
+		//clients.put(client.getName(), client);
 	}
 
 	/**
@@ -86,20 +86,37 @@ public class Bank implements Report {
 	 * @return Client or null if not found
 	 */
 	public Client findClientByName(String name) {
-		/*for (Client c : clients)
+		/*for (Client c : clientsList)
 			if (c.getName().equals(name)) {
 				return  c;
 			}
 		return null;*/
 
-		return mapClients.get(name);
+		return clients.get(name);
 	}
 
     public void registerListener(ClientRegistrationListener listener) {
         listeners.add(listener);
     }
+
     public List<ClientRegistrationListener> getListeners() {
         return listeners;
     }
+
+	public void parseFeed(Map<String,String> feed) throws ClientExistsException {
+		String name = feed.get("name"); // client name
+
+		Client client = clients.get(name);
+		if (client == null) { // if no client then create it
+			client = new Client(name, 0f);
+			//clients.put(name, client);
+			addClient(client);
+		}
+
+		client.setGender(feed.get("gender").equals("m") ?
+				Gender.MALE : Gender.FEMALE);
+
+		client.parseFeed(feed);
+	}
 }
 
