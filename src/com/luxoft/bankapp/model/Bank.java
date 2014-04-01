@@ -80,6 +80,11 @@ public class Bank implements Report {
 		//clients.put(client.getName(), client);
 	}
 
+	public void removeClient(Client client) {
+		clientsList.remove(client);
+		clients.remove(client.getName());
+	}
+
 	/**
 	 *
 	 * @param name - Client name you want to find

@@ -1,10 +1,13 @@
 package com.luxoft.bankapp.service.networking;
 
+import com.luxoft.bankapp.exceptions.ClientExistsException;
+import com.luxoft.bankapp.exceptions.ClientNotFoundException;
 import com.luxoft.bankapp.exceptions.DataVerifyException;
 import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.luxoft.bankapp.model.Bank;
 import com.luxoft.bankapp.model.Client;
 import com.luxoft.bankapp.service.BankApplication;
+import com.luxoft.bankapp.service.BankServiceImpl;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -93,15 +96,37 @@ public class BankServer {
 								sendMessage(e.getMessage());
 							}
 							break;
+						case "addClient":
+							Client client = (Client)in.readObject();
+							activeBank.addClient(client);
+							sendMessage("The client was successfully added");
+							break;
+						case "getClientInfo":
+							if (activeClient == null) {
+								sendMessage("You have to authorize for this operation");
+							} else {
+								sendMessage(activeClient.toString());
+							}
+							break;
+						case "deleteClient":
+							Client findingClient = activeBank.findClientByName(commandParam);
+							if (findingClient == null) {
+								throw new ClientNotFoundException(commandParam);
+							} else {
+								new BankServiceImpl().removeClient(activeBank, findingClient);
+								sendMessage("The client removed successfully");
+							}
+							break;
 						default:
 							sendMessage("Unknown command");
 					}
 
-
-
-
 				} catch (ClassNotFoundException classnot) {
 					System.err.println("Data received in unknown format");
+				} catch (ClientExistsException e) {
+					sendMessage(e.getMessage());
+				} catch (ClientNotFoundException e) {
+					sendMessage(e.getMessage());
 				}
 			} while (!message.equals("exit"));
 		} catch (IOException ioException) {

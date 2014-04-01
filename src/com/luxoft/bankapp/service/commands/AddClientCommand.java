@@ -10,62 +10,66 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Created by Admin on 27.03.2014.
+ * Created by Sergey Popov on 27.03.2014.
  */
 public class AddClientCommand implements Command {
-	@Override
-	public void execute() throws IOException {
+	public Client getClientInfoDialog() throws IOException, DataVerifyException {
 		InputStreamReader streamReader = new InputStreamReader(System.in);
 		BufferedReader bufferedReader = new BufferedReader(streamReader);
 
+		System.out.print("Enter full name:\n -> ");
+		String userName = bufferedReader.readLine();
+		if (!isValidName(userName)) {
+			throw new DataVerifyException("Entered name is incorrect");
+		}
+
+		System.out.print("Enter initial overdraft for client:\n -> ");
+		float initOverdraft = Float.parseFloat(bufferedReader.readLine());
+
+		System.out.print("Enter client gender (male/female):\n -> ");
+		String sgender = bufferedReader.readLine().toUpperCase();
+		Gender gender;
+		try {
+			gender = Gender.valueOf(sgender);
+		} catch (IllegalArgumentException ex) {
+			throw new DataVerifyException("Incorrect gender information");
+		}
+
+		System.out.print("Enter e-mail:\n -> ");
+		String userEmail = bufferedReader.readLine();
+		if (!isValidEmail(userEmail)) {
+			throw new DataVerifyException("The e-mail is incorrect");
+		}
+
+		System.out.print("Enter phone number:\n -> ");
+		String phoneNumber = bufferedReader.readLine();
+		if (!isValidPhone(phoneNumber)) {
+			throw new DataVerifyException("Phone number is incorrect");
+		}
+
+		System.out.print("Enter your city:\n -> ");
+		String userCity = bufferedReader.readLine();
+		if (!isValidCityName(userCity)) {
+			throw new DataVerifyException("City name is incorrect");
+		}
+
+		Account acc = new SavingAccount(0f);
+
+		Client client = new Client(userName, initOverdraft);
+		client.setPhone(phoneNumber);
+		client.setGender(gender);
+		client.setEmail(userEmail);
+		client.addAccount(acc);
+		client.setActiveAccount(acc);
+		client.setCity(userCity);
+		return client;
+	}
+
+	@Override
+	public void execute() throws IOException {
 		System.out.println("   Adding new client\n");
 		try {
-			System.out.print("Enter full name:\n -> ");
-			String userName = bufferedReader.readLine();
-			if (!isValidName(userName)) {
-				throw new DataVerifyException("Entered name is incorrect");
-			}
-
-			System.out.print("Enter initial overdraft for client:\n -> ");
-			float initOverdraft = Float.parseFloat(bufferedReader.readLine());
-
-			System.out.print("Enter client gender (male/female):\n -> ");
-			String sgender = bufferedReader.readLine().toUpperCase();
-			Gender gender;
-			try {
-				gender = Gender.valueOf(sgender);
-			} catch (IllegalArgumentException ex) {
-				throw new DataVerifyException("Incorrect gender information");
-			}
-
-			System.out.print("Enter e-mail:\n -> ");
-			String userEmail = bufferedReader.readLine();
-			if (!isValidEmail(userEmail)) {
-				throw new DataVerifyException("The e-mail is incorrect");
-			}
-
-			System.out.print("Enter phone number:\n -> ");
-			String phoneNumber = bufferedReader.readLine();
-			if (!isValidPhone(phoneNumber)) {
-				throw new DataVerifyException("Phone number is incorrect");
-			}
-
-			System.out.print("Enter your city:\n -> ");
-			String userCity = bufferedReader.readLine();
-			if (!isValidCityName(userCity)) {
-				throw new DataVerifyException("City name is incorrect");
-			}
-
-			Account acc = new SavingAccount(0f);
-
-			Client client = new Client(userName, initOverdraft);
-			client.setPhone(phoneNumber);
-			client.setGender(gender);
-			client.setEmail(userEmail);
-			client.addAccount(acc);
-			client.setActiveAccount(acc);
-			client.setCity(userCity);
-			BankCommander.activeBank.addClient(client);
+			BankCommander.activeBank.addClient(getClientInfoDialog());
 		}
 		catch (DataVerifyException ex) {
 			System.out.println(ex.getMessage());

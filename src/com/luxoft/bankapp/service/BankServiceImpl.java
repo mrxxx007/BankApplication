@@ -15,14 +15,17 @@ public class BankServiceImpl implements BankService {
 //        for (ClientRegistrationListener listener : bank.getListeners())
 //            listener.onClientAdded(client);
     }
+
     @Override
     public void removeClient(Bank bank, Client client) {
-        bank.getClientsList().remove(client);
+        bank.removeClient(client);
     }
+
     @Override
     public  void addAccount(Client client, Account acc) {
         client.getAccounts().add(acc);
     }
+
     @Override
     public void setActiveAccount(Client client, Account account) {
         client.setActiveAccount(account);
