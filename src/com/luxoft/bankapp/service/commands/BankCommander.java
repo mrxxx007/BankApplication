@@ -2,9 +2,6 @@ package com.luxoft.bankapp.service.commands;
 
 import com.luxoft.bankapp.model.Bank;
 import com.luxoft.bankapp.model.Client;
-import com.luxoft.bankapp.service.BankApplication;
-import com.luxoft.bankapp.service.BankReport;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -59,7 +56,7 @@ public class BankCommander {
 				System.out.println("Exit");
 			}
 		});
-	};
+	}
 
 
 	/*private static Command[] commands = {
@@ -102,24 +99,12 @@ public class BankCommander {
 		else
 			System.out.println("\n= CLIENT: " + activeClient.getName());
 		System.out.println("========== Menu ==========");
-		/*for (int i = 0; i < commands.length; i++) {
-			System.out.print(i + ")  ");
-			commands[i].printCommandInfo();
-		}*/
-		StringBuilder sb = new StringBuilder();
+
 		for (Map.Entry entry : commands.entrySet()) {
-			/*sb.append(entry.getKey())
-				.append(") ")
-				.append( );
-			System.out.println(sb);
-			sb.setLength(0);*/
 			System.out.print(entry.getKey() + ") ");
 			((Command)entry.getValue()).printCommandInfo();
 		}
-		/*Iterator it = commands.entrySet().iterator();
-		while (it.hasNext()) {
-			sb.append(it.next().)
-		}*/
+
 		System.out.println("==========================");
 	}
 

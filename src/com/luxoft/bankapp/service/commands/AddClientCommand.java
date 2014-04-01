@@ -15,7 +15,6 @@ import java.io.InputStreamReader;
 public class AddClientCommand implements Command {
 	@Override
 	public void execute() throws IOException {
-		boolean isMale;
 		InputStreamReader streamReader = new InputStreamReader(System.in);
 		BufferedReader bufferedReader = new BufferedReader(streamReader);
 

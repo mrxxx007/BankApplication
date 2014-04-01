@@ -7,4 +7,8 @@ public class NoEnoughFundsException extends BankException {
 	public NoEnoughFundsException() {
 		super("You haven't enough funds to perform this operation");
 	}
+
+	public NoEnoughFundsException(String message) {
+		super(message);
+	}
 }

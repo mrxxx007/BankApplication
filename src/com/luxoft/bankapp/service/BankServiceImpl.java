@@ -3,9 +3,7 @@ package com.luxoft.bankapp.service;
 import com.luxoft.bankapp.exceptions.ClientExistsException;
 import com.luxoft.bankapp.model.*;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 
 /**
  * Created by user on 3/25/2014.
@@ -53,7 +51,19 @@ public class BankServiceImpl implements BankService {
 
 	@Override
 	public Client loadClient() {
-		return null;
+		Client client = null;
+		try {
+			ObjectInputStream input = new ObjectInputStream(new
+					FileInputStream("data/client.obj"));
+			client = (Client)input.readObject();
+			input.close();
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		return client;
 	}
 
 	@Override

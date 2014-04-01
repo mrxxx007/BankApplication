@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Client implements Report {
+public class Client implements Report, Serializable {
     private String name;
     private List<Account> accounts = new ArrayList<Account>();
     private Account activeAccount;
@@ -147,10 +147,10 @@ public class Client implements Report {
 		if (obj == null) return false;
 
 		final Client other = (Client)obj;
-		if (name != other.name) return false;
+		if (!name.equals(other.name)) return false;
 		if (gender != other.gender) return false;
-		if (email != other.email) return false;
-		if (phone != other.phone) return false;
+		if (!email.equals(other.email)) return false;
+		if (!phone.equals(other.phone)) return false;
 
 		return true;
 	}

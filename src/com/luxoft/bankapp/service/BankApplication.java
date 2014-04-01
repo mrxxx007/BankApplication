@@ -11,6 +11,8 @@ import java.io.IOException;
  * Created by user on 3/25/2014.
  */
 public class BankApplication {
+	private static final String FEED_FILE = "data/feed.data";
+
     public static void main(String[] args) {
         // Create new bank with DebugListener via new constructor
         /*ClientRegistrationListener[] listenersArray = {
@@ -30,8 +32,6 @@ public class BankApplication {
 
         initialize(bank);
 
-		// Loading info about clients from feed file
-		BankFeedService.loadFeed(bank, "data/feed.data");
 
 
 		for (String arg : args)
@@ -69,15 +69,13 @@ public class BankApplication {
 			//bankService.addClient(bank, client1);
 		}
 		catch (ClientExistsException ex) {
-			System.out.println("== !");
-			System.out.println("== ERROR: The client " + client1.getName() + " is already exists\n");
+			System.out.println(ex.getMessage());
 		}
         bankService.addAccount(client1, new CheckingAccount(200));
         bankService.addAccount(client1, new SavingAccount(700));
 		bankService.setActiveAccount(client1, client1.getAccounts().get(0));
 
-		//test serializable
-		new BankServiceImpl().saveClient(client1);
+
 
         Client client2 = new Client();
         client2.setName("Petrova S.P.");
@@ -90,6 +88,9 @@ public class BankApplication {
 		}
 		bankService.addAccount(client2, new SavingAccount(350));
 		bankService.setActiveAccount(client2, client2.getAccounts().get(0));
+
+		// Loading info about clients from feed file
+		BankFeedService.loadFeed(bank, FEED_FILE);
     }
 
     public static void modifyBank(Bank bank) {
@@ -101,11 +102,10 @@ public class BankApplication {
 			bank.getClientsList().get(0).getAccounts().get(0).withdraw(1500);
 		}
 		catch (OverDraftLimitExceededException ex) {
-			System.out.println("== !\n== ERROR: You haven't enough money");
-			System.out.println("== You can take: " + ex.getAvailableMoney());
+			System.out.println(ex.getMessage());
 		}
 		catch (NoEnoughFundsException ex) {
-			System.out.println("== !\n== ERROR: You haven't enough money\n");
+			System.out.println(ex.getMessage());
 		}
 		//bank.getClientsList().get(1).getAccounts().get(0).withdraw(200);
 

@@ -107,14 +107,17 @@ public class Bank implements Report {
 		String name = feed.get("name"); // client name
 
 		Client client = clients.get(name);
-		if (client == null) { // if no client then create it
+		// if no client then create it
+		if (client == null) {
 			client = new Client(name, 0f);
-			//clients.put(name, client);
 			addClient(client);
 		}
 
 		client.setGender(feed.get("gender").equals("m") ?
 				Gender.MALE : Gender.FEMALE);
+		client.setCity(feed.get("city"));
+		client.setPhone(feed.get("phone"));
+		client.setEmail(feed.get("email"));
 
 		client.parseFeed(feed);
 	}

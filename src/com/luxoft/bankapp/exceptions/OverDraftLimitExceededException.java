@@ -7,6 +7,7 @@ public class OverDraftLimitExceededException extends NoEnoughFundsException {
     private float availableMoney;
 
 	public OverDraftLimitExceededException(float availableMoney) {
+		super("You haven't enough money. You can take only " + availableMoney);
         this.availableMoney = availableMoney;
     }
 

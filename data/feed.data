@@ -1,2 +1,2 @@
-accounttype=c;balance=100;overdraft=50;name=John Smith;gender=m
-accounttype=s;balance=700;name=Gloria Riley;gender=f
+accounttype=c;balance=100;overdraft=50;name=John Smith;gender=m;city=London;phone=1234567890;email=john@mail.com
+accounttype=s;balance=700;name=Gloria Riley;gender=f;city=New York;phone=1234567890;email=riley@mail.com
