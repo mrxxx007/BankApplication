@@ -42,8 +42,10 @@ public class BankApplicationTest {
 		Client readedClient = bankService.loadClient();
 
 		assertNotNull(readedClient);
-		assertEquals(readedClient.getName(), "Ivanov I.P.");
-		assertEquals(readedClient.getClientSalutation(), Gender.MALE.getSalut());
-		assertEquals(readedClient.getAccounts().size(), 2);
+		assertEquals("Ivanov I.P.", readedClient.getName());
+		assertEquals(Gender.MALE.getSalut(), readedClient.getClientSalutation());
+		assertEquals(2, readedClient.getAccounts().size());
+		assertEquals(client1.getAccounts().get(0).getBalance(),
+				readedClient.getAccounts().get(0).getBalance(), 0f);
 	}
 }

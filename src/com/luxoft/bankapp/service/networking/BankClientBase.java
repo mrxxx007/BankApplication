@@ -40,17 +40,13 @@ public class BankClientBase {
 					message = (String) in.readObject();
 					System.out.println("server > " + message);
 
-					printMenu();
 					// print commands menu
-
+					printMenu();
 					System.out.print(" -> ");
-					// read cmd number and put cmd name to message string
 
+					// read cmd number and put cmd name to message string and send message
 					cmdNumber = Integer.parseInt(bufferedReader.readLine());
-					//value = commands.get(bufferedReader.readLine());
 					generateAnsSendCmd(cmdNumber, bufferedReader);
-					//sendMessage(message);
-
 					System.out.println("");
 				} catch (ClassNotFoundException classNot) {
 					System.err.println("data received in unknown format");
@@ -75,11 +71,8 @@ public class BankClientBase {
 	}
 
 	void printMenu() {
-		//commands = ClientServerCommands.getAllCommands();
 		System.out.println("\n====== Menu ======");
-		/*for (Map.Entry entry : commands.entrySet()) {
-			System.out.println(entry.getKey() + ") " + entry.getValue());
-		}*/
+
 		if (commands == null) {
 			System.out.println("Null commands");
 			return;
@@ -132,7 +125,7 @@ public class BankClientBase {
 				message = cmdName + " " + value;
 				break;
 			default:
-				//TODO Add new exception CmdNotFound etc.
+				//TODO Add new exception CmdNotFound
 				break;
 		}
 
