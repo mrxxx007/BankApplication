@@ -30,7 +30,6 @@ public class BankFeedService {
 				} catch (ClientExistsException e) {
 					System.out.println(e.getMessage());
 				}
-
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
