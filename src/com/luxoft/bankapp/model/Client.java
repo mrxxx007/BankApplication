@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Client implements Report, Serializable {
+	private int id;
 	private String name;
 	private List<Account> accounts = new ArrayList<Account>();
 	private Account activeAccount;

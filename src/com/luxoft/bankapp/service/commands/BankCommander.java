@@ -108,33 +108,15 @@ public class BankCommander {
 		System.out.println("==========================");
 	}
 
-	public static Client getActiveClient() {
-		return activeClient;
-	}
-
-	public static void setActiveClient(Client activeClient) {
-		BankCommander.activeClient = activeClient;
-	}
-
-	public static Bank getActiveBank() {
-		return activeBank;
-	}
-
-	public static void setActiveBank(Bank activeBank) {
-		BankCommander.activeBank = activeBank;
-	}
-
 	public static void startBankCommander(Bank bank) {
 		activeBank = bank;
-		//BankApplication.initialize(activeBank);
 
 		String commandString;
 		InputStreamReader streamReader = new InputStreamReader(System.in);
 		BufferedReader bufferedReader = new BufferedReader(streamReader);
-		//String commNumber;
+
 		while (true) {
 			printMenu();
-			//BankReport.getClientsSorted(activeBank);
 			System.out.print(" -> ");
 			try {
 				commandString = bufferedReader.readLine();
@@ -143,7 +125,6 @@ public class BankCommander {
 					throw new NumberFormatException();
 
 				commands.get(commandString).execute();
-				//commands[i].execute();
 			}
 			catch (NumberFormatException e) {
 				System.out.println("Please, enter correct number");

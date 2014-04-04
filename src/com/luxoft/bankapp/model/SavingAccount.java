@@ -7,6 +7,7 @@ import java.util.Map;
  * Created by Sergey Popov on 3/25/2014.
  */
 public class SavingAccount extends AbstractAccount {
+	private int id;
 	private String accountType = "s";
 
 	public SavingAccount() {

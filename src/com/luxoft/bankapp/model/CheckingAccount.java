@@ -9,6 +9,7 @@ import java.util.Map;
  * Created by Sergey Popov on 3/25/2014.
  */
 public class CheckingAccount extends AbstractAccount {
+	private int id;
     private float overdraft;
 	private String accountType = "c";
 
