@@ -71,8 +71,8 @@ public class BankApplication {
 		catch (ClientExistsException ex) {
 			System.out.println(ex.getMessage());
 		}
-        bankService.addAccount(client1, new CheckingAccount(200));
-        bankService.addAccount(client1, new SavingAccount(700));
+        bankService.addAccount(client1, new CheckingAccount(200f, 500f));
+        bankService.addAccount(client1, new SavingAccount(700f));
 		bankService.setActiveAccount(client1, client1.getAccounts().get(0));
 
 

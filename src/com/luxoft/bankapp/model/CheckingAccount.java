@@ -9,22 +9,19 @@ import java.util.Map;
  * Created by Sergey Popov on 3/25/2014.
  */
 public class CheckingAccount extends AbstractAccount {
-	private int id;
     private float overdraft;
-	private String accountType = "c";
+	//private String accountType = "c";
 
-	@Override
-	public String getAccountType() {
-		return accountType;
-	}
-
-	public CheckingAccount() {
+    public CheckingAccount() {
         balance = 0f;
-		id = ++accountsAmt;
+        accountType = "c";
+        //id = ++accountsAmt;
     }
-    public CheckingAccount(float balance) {
+    public CheckingAccount(float balance, float overdraft) {
         this.balance = balance;
-		id = ++accountsAmt;
+        this.overdraft = overdraft;
+        accountType = "c";
+        //id = ++accountsAmt;
     }
 
     public void setOverdraft(float x){

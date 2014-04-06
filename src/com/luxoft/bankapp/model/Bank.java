@@ -10,7 +10,7 @@ import java.util.*;
  * Created by user on 3/25/2014.
  */
 public class Bank implements Report {
-	private int id;
+    private int id;
     private String name;
     private List<Client> clientsList = new ArrayList<Client>();
 	private Map<String, Client> clients = new HashMap<String, Client>();
@@ -65,6 +65,14 @@ public class Bank implements Report {
 		BankReport.getAccountsNumber(this);
 		BankReport.getBankCreditSum(this);
 	}
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public List<Client> getClientsList() {
         return Collections.unmodifiableList(clientsList);

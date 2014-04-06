@@ -1,5 +1,5 @@
 package com.luxoft.bankapp.model; /**
- * Created by user on 3/25/2014.
+ * Created by Sergey Popov on 3/25/2014.
  */
 
 import com.luxoft.bankapp.exceptions.DataVerifyException;
@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 public class Client implements Report, Serializable {
-	private int id;
+	private int id = -1;
+    private int bankId;
 	private String name;
 	private List<Account> accounts = new ArrayList<Account>();
 	private Account activeAccount;
@@ -35,35 +36,10 @@ public class Client implements Report, Serializable {
 		this(initialOverdraft);
 		this.name = name;
 	}
-
-
-	/**
-	 * This method finds account by its type or create a new one
-	 */
-	private Account getAccount(String accountType) {
-		for (Account acc : accounts) {
-			if (acc.getAccountType().equals(accountType)) {
-				return acc;
-			}
-		}
-		return createAccount(accountType);
-	}
-
-	/**
-	 * This method creates account by its type
-	 */
-	private Account createAccount(String accountType) {
-		Account acc;
-		if ("s".equals(accountType)) {
-			acc = new SavingAccount();
-		} else if ("c".equals(accountType)) {
-			acc = new CheckingAccount();
-		} else {
-			throw new FeedException("Account type not found " + accountType);
-		}
-		accounts.add(acc);
-		return acc;
-	}
+    public Client (int id, String name, float initialOverdraft) {
+        this(name, initialOverdraft);
+        this.id = id;
+    }
 
 	@Override
 	public void printReport() {
@@ -103,6 +79,10 @@ public class Client implements Report, Serializable {
 	public void addAccount(Account account) {
 		accounts.add(account);
 	}
+
+    public void addAccounts(List<Account> accounts) {
+        this.accounts.addAll(accounts);
+    }
 
 
 	public String getName() {
@@ -145,6 +125,25 @@ public class Client implements Report, Serializable {
 		this.city = city;
 	}
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getGender() {
+        return gender.name();
+    }
+
+    public int getBankId() {
+        return bankId;
+    }
+
+    public void setBankId(int bankId) {
+        this.bankId = bankId;
+    }
 
 	public void parseFeed(Map<String, String> feed) {
 		String accountType = feed.get("accounttype");
@@ -196,6 +195,32 @@ public class Client implements Report, Serializable {
 		return sb.toString();
 	}
 
+    /**
+     * This method finds account by its type or create a new one
+     */
+    private Account getAccount(String accountType) {
+        for (Account acc : accounts) {
+            if (acc.getAccountType().equals(accountType)) {
+                return acc;
+            }
+        }
+        return createAccount(accountType);
+    }
 
+    /**
+     * This method creates account by its type
+     */
+    private Account createAccount(String accountType) {
+        Account acc;
+        if ("s".equals(accountType)) {
+            acc = new SavingAccount();
+        } else if ("c".equals(accountType)) {
+            acc = new CheckingAccount();
+        } else {
+            throw new FeedException("Account type not found " + accountType);
+        }
+        accounts.add(acc);
+        return acc;
+    }
 }
 

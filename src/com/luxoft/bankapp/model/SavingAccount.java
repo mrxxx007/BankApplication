@@ -7,16 +7,15 @@ import java.util.Map;
  * Created by Sergey Popov on 3/25/2014.
  */
 public class SavingAccount extends AbstractAccount {
-	private int id;
-	private String accountType = "s";
-
 	public SavingAccount() {
         balance = 0f;
-		id = ++accountsAmt;
+        accountType = "s";
+		//id = ++accountsAmt;
     }
     public SavingAccount(float balance) {
         this.balance = balance;
-		id = ++accountsAmt;
+        accountType = "s";
+		//id = ++accountsAmt;
     }
 
 	@Override
@@ -26,11 +25,6 @@ public class SavingAccount extends AbstractAccount {
 		} catch (NumberFormatException e) {
 			System.out.println(e.getMessage());
 		}
-	}
-
-	@Override
-	public String getAccountType() {
-		return accountType;
 	}
 
     @Override

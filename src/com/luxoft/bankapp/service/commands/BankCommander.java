@@ -9,11 +9,13 @@ import java.util.*;
 
 
 /**
- * Created by user on 3/28/2014.
+ * Created by Sergey Popov on 3/28/2014.
  */
 public class BankCommander {
 	public static Client activeClient;
 	public static Bank activeBank;
+    // Default bank
+    private static String bankName = "My Bank";
 
 	private static int commandNum;
 	private static Map<String, Command> commands = new TreeMap<>(new Comparator<String>() {
@@ -23,8 +25,6 @@ public class BankCommander {
 		}
 	});
 	static {
-		//AddClientCommand addClientCommand = new AddClientCommand();
-
 		commands.put(Integer.toString(commandNum++), new AddClientCommand());
 		commands.put(Integer.toString(commandNum++), new FindClientCommand());
 		commands.put(Integer.toString(commandNum++), new GetAccountsCommand());
@@ -57,41 +57,6 @@ public class BankCommander {
 			}
 		});
 	}
-
-
-	/*private static Command[] commands = {
-		new FindClientCommand(),
-		new GetAccountsCommand(),
-		new WithdrawCommand(),
-		new DepositCommand(),
-		new TransferCommand(),
-		new AddClientCommand(),
-		new Command() {
-			@Override
-			public void execute() throws IOException {
-				if (activeClient == null)
-					System.out.println("No active client");
-				else
-					System.out.println(activeClient);
-			}
-
-			@Override
-			public void printCommandInfo() {
-				System.out.println("Print active client info");
-			}
-		},
-		new Command() {
-			@Override
-			public void execute() {
-				System.exit(0);
-			}
-
-			@Override
-			public void printCommandInfo() {
-				System.out.println("Exit");
-			}
-		}
-	};*/
 
 	public static void printMenu() {
 		if (activeClient == null)
@@ -148,8 +113,8 @@ public class BankCommander {
 	}
 
 	public static void main(String[] args) {
-		startBankCommander(new Bank("Luxoft bank"));
-
+		startBankCommander(new Bank(bankName));
+        //TODO Make initialize bank from DB
 	}
 
 }
