@@ -60,7 +60,7 @@ public class SavingAccount extends AbstractAccount {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("Type: Saving account\n")
-			.append("Balance: ").append(balance)
+			.append("   Balance: ").append(balance)
 			.append("\n");
 		return sb.toString();
 	}

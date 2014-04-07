@@ -187,7 +187,7 @@ public class Client implements Report, Serializable {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Info for client: ")
+		sb.append("\nInfo for client: ")
 				.append(gender.getSalut())
 				.append(" ").append(name)
 				.append("\n")

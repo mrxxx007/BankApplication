@@ -78,8 +78,8 @@ public class CheckingAccount extends AbstractAccount {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("Type: Checking account\n")
-			.append("Balance: ").append(balance)
-			.append("\nOverdraft: ").append(overdraft)
+			.append("   Balance: ").append(balance)
+			.append("\n   Overdraft: ").append(overdraft)
 			.append("\n");
 		return sb.toString();
 	}
