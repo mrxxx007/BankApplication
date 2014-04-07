@@ -1,6 +1,8 @@
 package com.luxoft.bankapp.service.commands;
 
+import com.luxoft.bankapp.data.ClientDAOImpl;
 import com.luxoft.bankapp.exceptions.ClientExistsException;
+import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.exceptions.DataVerifyException;
 import com.luxoft.bankapp.model.*;
 import com.luxoft.bankapp.service.BankServiceImpl;
@@ -13,7 +15,7 @@ import java.io.InputStreamReader;
  * Created by Sergey Popov on 27.03.2014.
  */
 public class AddClientCommand implements Command {
-	public Client getClientInfoDialog() throws IOException, DataVerifyException {
+	public Client getClientInfoDialog() throws DataVerifyException, IOException {
 		InputStreamReader streamReader = new InputStreamReader(System.in);
 		BufferedReader bufferedReader = new BufferedReader(streamReader);
 
@@ -62,6 +64,7 @@ public class AddClientCommand implements Command {
 		client.addAccount(acc);
 		client.setActiveAccount(acc);
 		client.setCity(userCity);
+		client.setBankId(BankCommander.activeBank.getId());
 		return client;
 	}
 
@@ -69,7 +72,11 @@ public class AddClientCommand implements Command {
 	public void execute() throws IOException {
 		System.out.println("   Adding new client\n");
 		try {
-			BankCommander.activeBank.addClient(getClientInfoDialog());
+			BankCommander.activeClient = getClientInfoDialog();
+			if (BankCommander.activeClient != null) {
+				BankCommander.activeBank.addClient(BankCommander.activeClient);
+			}
+			new ClientDAOImpl().save(BankCommander.activeClient);
 		}
 		catch (DataVerifyException ex) {
 			System.out.println(ex.getMessage());
@@ -80,6 +87,8 @@ public class AddClientCommand implements Command {
 		}
 		catch (ClientExistsException ex) {
 			System.out.println(ex.getMessage());
+		} catch (DAOException e) {
+			e.printStackTrace();
 		}
 	}
 

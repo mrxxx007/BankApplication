@@ -2,6 +2,7 @@ package com.luxoft.bankapp.data;
 
 import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.model.Bank;
+import com.luxoft.bankapp.model.BankInfo;
 
 import java.sql.SQLException;
 
@@ -15,5 +16,10 @@ public interface BankDAO {
 	 * @param name
 	 * @return
 	 */
-	Bank getBankByName(String name) throws SQLException, DAOException;
+	Bank getBankByName(String name) throws DAOException;
+
+	/**
+	 * Should fill the BankInfo
+	 */
+	BankInfo getBankInfo(Bank bank) throws DAOException;
 }

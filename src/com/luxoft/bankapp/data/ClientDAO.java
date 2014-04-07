@@ -33,18 +33,18 @@ public interface ClientDAO {
 	 * @param bankId
 	 * @return
 	 */
-	List<Client> getAllClients(Bank bankId) throws SQLException;
+	List<Client> getAllClients(Bank bankId);
 
 	/**
 	 * Method should insert new Client (if id==null)
 	 * or update client in database (if id!=null)
 	 * @param client
 	 */
-	void save(Client client) throws SQLException, DAOException;
+	void save(Client client) throws DAOException;
 
 	/**
 	 * Method removes client from Database
 	 * @param client
 	 */
-	void remove(Client client) throws SQLException, DAOException;
+	void remove(Client client) throws DAOException;
 }

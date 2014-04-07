@@ -19,9 +19,7 @@ public class BankReport {
 	public static void getAccountsNumber(Bank bank) {
 		int count = 0;
 		for (Client client : bank.getClientsList()) {
-			for (Account acc : client.getAccounts()) {
-				count++;
-			}
+			count += client.getAccounts().size();
 		}
 		System.out.println("Total accounts number: " + count);
 	}
@@ -50,12 +48,7 @@ public class BankReport {
 
 	public static void getClientsByCity(Bank bank) {
 		Map<String, List<Client>> result =
-				new TreeMap<String, List<Client>>(new Comparator<String>() {
-			@Override
-			public int compare(String o1, String o2) {
-				return (o1.compareTo(o2));
-			}
-		});
+				new TreeMap<String, List<Client>>();
 
 		for (Client client : bank.getClientsList()) {
 			if (!result.containsKey(client.getCity())) {

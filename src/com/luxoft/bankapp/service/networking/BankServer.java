@@ -1,9 +1,6 @@
 package com.luxoft.bankapp.service.networking;
 
-import com.luxoft.bankapp.exceptions.ClientExistsException;
-import com.luxoft.bankapp.exceptions.ClientNotFoundException;
-import com.luxoft.bankapp.exceptions.DataVerifyException;
-import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
+import com.luxoft.bankapp.exceptions.*;
 import com.luxoft.bankapp.model.Bank;
 import com.luxoft.bankapp.model.Client;
 import com.luxoft.bankapp.service.BankApplication;
@@ -94,6 +91,8 @@ public class BankServer {
 								sendMessage(e.getMessage());
 							} catch (NoEnoughFundsException e) {
 								sendMessage(e.getMessage());
+							} catch (AccountNotFoundException e) {
+								e.printStackTrace();
 							}
 							break;
 						case "addClient":

@@ -1,5 +1,8 @@
 package com.luxoft.bankapp.service.commands;
 
+import com.luxoft.bankapp.data.ClientDAO;
+import com.luxoft.bankapp.data.ClientDAOImpl;
+import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.exceptions.DataVerifyException;
 import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.luxoft.bankapp.exceptions.NotFoundException;
@@ -29,6 +32,8 @@ public class DepositCommand implements Command {
 
 			float amount = Float.parseFloat(bufferedReader.readLine());
 			BankCommander.activeClient.deposit(amount);
+
+			new ClientDAOImpl().save(BankCommander.activeClient);
 		} catch (DataVerifyException e) {
 			System.out.println(e.getMessage());
 		} catch (NotFoundException e) {
@@ -37,6 +42,8 @@ public class DepositCommand implements Command {
 			e.printStackTrace();
 		} catch (NoEnoughFundsException e) {
 			System.out.println(e.getMessage());
+		} catch (DAOException e) {
+			e.printStackTrace();
 		}
 	}
 

@@ -15,8 +15,6 @@ public interface Account extends Report {
 	int decimalValue();
 	String getAccountType();
 	void parseFeed(Map<String, String> feed);
-    int getClientId();
-    void setClientId(int id);
     void setId(int id);
     int getId();
 }

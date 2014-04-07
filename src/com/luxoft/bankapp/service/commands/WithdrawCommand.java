@@ -1,8 +1,11 @@
 package com.luxoft.bankapp.service.commands;
 
+import com.luxoft.bankapp.data.ClientDAOImpl;
+import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.exceptions.DataVerifyException;
 import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.luxoft.bankapp.exceptions.NotFoundException;
+import com.luxoft.bankapp.model.Bank;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -25,6 +28,8 @@ public class WithdrawCommand implements Command {
 			float amount = Float.parseFloat(bufferedReader.readLine());
 
 			BankCommander.activeClient.withdraw(amount);
+
+			new ClientDAOImpl().save(BankCommander.activeClient);
 		} catch (DataVerifyException e) {
 			System.out.println(e.getMessage());
 		} catch (NoEnoughFundsException e) {
@@ -33,6 +38,8 @@ public class WithdrawCommand implements Command {
 			System.out.println(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
+		} catch (DAOException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 

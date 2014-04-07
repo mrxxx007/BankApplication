@@ -1,5 +1,8 @@
 package com.luxoft.bankapp.service.commands;
 
+import com.luxoft.bankapp.data.ClientDAO;
+import com.luxoft.bankapp.data.ClientDAOImpl;
+import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.exceptions.DataVerifyException;
 import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.luxoft.bankapp.exceptions.NotFoundException;
@@ -31,13 +34,20 @@ public class TransferCommand implements Command {
 			System.out.print("Enter receiver client name:\n -> ");
 			String clientName = bufferedReader.readLine();
 
-			Client receiver = BankCommander.activeBank.findClientByName(clientName);
+			//Client receiver = BankCommander.activeBank.findClientByName(clientName);
+			Client receiver = new ClientDAOImpl().findClientByName(BankCommander.activeBank, clientName);
 			if (receiver == null) {
 				throw new NotFoundException("The receiver " + clientName + " not found");
 			}
 
 			BankCommander.activeClient.withdraw(amount);
 			receiver.deposit(amount);
+
+			ClientDAO clientDAO = new ClientDAOImpl();
+			clientDAO.save(BankCommander.activeClient);
+			clientDAO.save(receiver);
+			System.out.printf("Transfer from %s to %s complete",
+					BankCommander.activeClient.getName(), receiver.getName());
 		}
 		catch (DataVerifyException e) {
 			System.out.println(e.getMessage());
@@ -47,6 +57,8 @@ public class TransferCommand implements Command {
 			System.out.println(e.getMessage());
 		} catch (NotFoundException e) {
 			System.out.println(e.getMessage());
+		} catch (DAOException e) {
+			e.printStackTrace();
 		}
 	}
 

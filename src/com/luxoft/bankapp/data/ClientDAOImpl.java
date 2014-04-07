@@ -34,21 +34,26 @@ public class ClientDAOImpl implements ClientDAO {
             }
 
             client = extractClientFromResultSet(resultSet);
-            client.addAccounts(new AccountDAOImpl().getClientAccounts(client.getId()));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
 
-        baseDAO.closeConnection();
+			List<Account> clientAccounts = new AccountDAOImpl().getClientAccounts(client.getId());
+			if (clientAccounts.size() > 0) {
+				client.addAccounts(clientAccounts);
+				client.setActiveAccount(clientAccounts.get(0));
+			}
+		} catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+			baseDAO.closeConnection();
+		}
+
         return client;
     }
 
     @Override
     public Client findClientById(int clientId) throws ClientNotFoundException {
         BaseDAO baseDAO = new BaseDAOImpl();
-        Connection conn = baseDAO.openConnection();
         Client client = null;
-        try {
+        try (Connection conn = baseDAO.openConnection()) {
             PreparedStatement stmtClient =
                     conn.prepareStatement("SELECT * FROM CLIENTS WHERE ID = ?");
             stmtClient.setInt(1, clientId);
@@ -59,88 +64,113 @@ public class ClientDAOImpl implements ClientDAO {
             }
 
             client = extractClientFromResultSet(resultSet);
-            client.addAccounts(new AccountDAOImpl().getClientAccounts(client.getId()));
+
+			List<Account> clientAccounts = new AccountDAOImpl().getClientAccounts(client.getId());
+            if (clientAccounts.size() > 0) {
+				client.addAccounts(clientAccounts);
+				client.setActiveAccount(clientAccounts.get(0));
+			}
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } finally {
+			baseDAO.closeConnection();
+		}
 
-        baseDAO.closeConnection();
         return client;
     }
 
     @Override
-    public List<Client> getAllClients(Bank bank) throws SQLException {
+    public List<Client> getAllClients(Bank bank) {
         BaseDAO baseDAO = new BaseDAOImpl();
-        Connection conn = baseDAO.openConnection();
-
         List<Client> clients = new ArrayList<>();
 
-        int bankId = bank.getId();
-        PreparedStatement stmt = conn.prepareStatement("SELECT * FROM CLIENTS WHERE BANK_ID = ?");
-        stmt.setInt(1, bankId);
-        ResultSet resultSet = stmt.executeQuery();
+		try (Connection conn = baseDAO.openConnection()) {
+			int bankId = bank.getId();
+			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM CLIENTS WHERE BANK_ID = ?");
+			stmt.setInt(1, bankId);
+			ResultSet resultSet = stmt.executeQuery();
 
-        while (resultSet.next()) {
-            String name = resultSet.getString("NAME");
-            Gender gender = Gender.valueOf(resultSet.getString("GENDER").toUpperCase());
-            String email = resultSet.getString("EMAIL");
-            String phone = resultSet.getString("PHONE");
-            String city = resultSet.getString("CITY");
-            int id = resultSet.getInt("ID");
+			while (resultSet.next()) {
+				String name = resultSet.getString("NAME");
+				Gender gender = Gender.valueOf(resultSet.getString("GENDER").toUpperCase());
+				String email = resultSet.getString("EMAIL");
+				String phone = resultSet.getString("PHONE");
+				String city = resultSet.getString("CITY");
+				int id = resultSet.getInt("ID");
 
-            Client client = new Client(id, name, 0f);
-            client.setGender(gender);
-            client.setId(id);
-            client.setEmail(email);
-            client.setPhone(phone);
-            client.setCity(city);
-            client.setBankId(bankId);
+				Client client = new Client(id, name, 0f);
+				client.setGender(gender);
+				client.setId(id);
+				client.setEmail(email);
+				client.setPhone(phone);
+				client.setCity(city);
+				client.setBankId(bankId);
 
-            clients.add(client);
-        }
+				List<Account> clientAccounts = new AccountDAOImpl().getClientAccounts(client.getId());
+				if (clientAccounts.size() > 0) {
+					client.addAccounts(clientAccounts);
+					client.setActiveAccount(clientAccounts.get(0));
+				}
 
-        baseDAO.closeConnection();
+				clients.add(client);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			baseDAO.closeConnection();
+		}
         return clients;
     }
 
     @Override
-    public void save(Client client) throws SQLException, DAOException {
+    public void save(Client client) throws DAOException {
         BaseDAO baseDAO = new BaseDAOImpl();
-        Connection conn = baseDAO.openConnection();
         PreparedStatement stmtClient = null;
-        if (client.getId() != -1) {
-            stmtClient = getQuery(QueryType.INSERT, client, conn);
-            if (stmtClient.executeUpdate() == 0) {
-                throw new DAOException("Impossible to save Client in DB. Transaction is rolled back");
-            }
-            ResultSet resultSet = stmtClient.getGeneratedKeys();
-            if (resultSet == null || !resultSet.next()) {
-                throw new DAOException("Impossible to save in DB. Can't get clientID.");
-            }
-            client.setId(resultSet.getInt(1));
-        } else {
-            stmtClient = getQuery(QueryType.UPDATE, client, conn);
-            if (stmtClient.executeUpdate() == 0) {
-                throw new DAOException("Impossible to update Client in DB. Transaction is rolled back");
-            }
-        }
+		try (Connection conn = baseDAO.openConnection()) {
+			if (client.getId() == -1) {
+				stmtClient = getQuery(QueryType.INSERT, client, conn);
+				if (stmtClient.executeUpdate() == 0) {
+					throw new DAOException("Impossible to save Client in DB. Transaction is rolled back");
+				}
+				ResultSet resultSet = stmtClient.getGeneratedKeys();
+				if (resultSet == null || !resultSet.next()) {
+					throw new DAOException("Impossible to save in DB. Can't get clientID.");
+				}
+				client.setId(resultSet.getInt(1));
+			} else {
+				stmtClient = getQuery(QueryType.UPDATE, client, conn);
+				if (stmtClient.executeUpdate() == 0) {
+					throw new DAOException("Impossible to update Client in DB. Transaction is rolled back");
+				}
+			}
 
-        AccountDAO accountDAO = new AccountDAOImpl();
-        for (Account acc : client.getAccounts()) {
-            accountDAO.save(acc, client.getId());
-        }
-        baseDAO.closeConnection();
+			AccountDAO accountDAO = new AccountDAOImpl();
+			for (Account acc : client.getAccounts()) {
+				System.out.println("Exec save acc");
+				accountDAO.save(acc, client.getId());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			baseDAO.closeConnection();
+		}
     }
 
     @Override
-    public void remove(Client client) throws SQLException, DAOException {
+    public void remove(Client client) throws DAOException {
         BaseDAO baseDAO = new BaseDAOImpl();
-        Connection conn = baseDAO.openConnection();
-        PreparedStatement stmtClient = getQuery(QueryType.DELETE, client, conn);
-        if (stmtClient.executeUpdate() == 0) {
-            throw new DAOException("Impossible to update Client in DB. Transaction is rolled back");
-        }
-    }
+		try (Connection conn = baseDAO.openConnection()) {
+			PreparedStatement stmtClient = getQuery(QueryType.DELETE, client, conn);
+			if (stmtClient.executeUpdate() == 0) {
+				throw new DAOException("Impossible to delete Client from DB. Transaction is rolled back");
+			}
+			new AccountDAOImpl().removeByClientId(client.getId());
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			baseDAO.closeConnection();
+		}
+	}
 
     private enum QueryType {
         INSERT, UPDATE, DELETE
@@ -148,11 +178,12 @@ public class ClientDAOImpl implements ClientDAO {
 
     private Client extractClientFromResultSet(ResultSet resultSet) throws SQLException {
         Client client = new Client(resultSet.getInt("ID"), resultSet.getString("NAME"), 0f);
-        client.setGender(resultSet.getString("GENDER").equals("M")
-                ? Gender.MALE : Gender.FEMALE);
+        Gender gender = Gender.valueOf(resultSet.getString("GENDER").toUpperCase());
+		client.setGender(gender);
         client.setEmail(resultSet.getString("EMAIL"));
         client.setPhone(resultSet.getString("PHONE"));
         client.setCity(resultSet.getString("CITY"));
+		client.setBankId(resultSet.getInt("BANK_ID"));
         return client;
     }
 

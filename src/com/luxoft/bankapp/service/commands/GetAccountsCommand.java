@@ -3,11 +3,10 @@ package com.luxoft.bankapp.service.commands;
 import com.luxoft.bankapp.exceptions.NotFoundException;
 import com.luxoft.bankapp.model.Account;
 import com.luxoft.bankapp.model.CheckingAccount;
-import com.luxoft.bankapp.model.Client;
 import com.luxoft.bankapp.service.BankServiceImpl;
 
 /**
- * Created by Admin on 27.03.2014.
+ * Created by Sergey Popov on 27.03.2014.
  */
 public class GetAccountsCommand implements Command {
 	@Override
@@ -28,8 +27,9 @@ public class GetAccountsCommand implements Command {
 			System.out.println("Account #" + ++i);
 			System.out.println("  Type: " + new BankServiceImpl().getAccountTypeName(acc));
 			System.out.println("  Balance: " + acc.getBalance());
-			if(acc.getClass().getName().equals(CheckingAccount.class.getName()))
-				System.out.println("  Overdraft: " + ((CheckingAccount)acc).getOverdraft());
+			if(acc.getAccountType().toUpperCase().equals("C")) {
+				System.out.println("  Overdraft: " + ((CheckingAccount) acc).getOverdraft());
+			}
 		}
 	}
 

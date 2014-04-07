@@ -16,64 +16,76 @@ import java.util.List;
  */
 public class AccountDAOImpl implements AccountDAO {
     @Override
-    public void save(Account account, int clientId) throws SQLException, DAOException {
+    public void save(Account account, int clientId) throws DAOException {
         BaseDAOImpl baseDAO = new BaseDAOImpl();
-        Connection conn = baseDAO.openConnection();
-        PreparedStatement stmt;
-        int accId = (account.getId());
+		try (Connection conn = baseDAO.openConnection()) {
+			PreparedStatement stmt;
+			int accId = (account.getId());
 
-        if (accId == -1) {
-            stmt = conn.prepareStatement("INSERT INTO ACCOUNTS(CLIENT_ID, ACCTYPE, BALANCE, OVERDRAFT) " +
-                    "VALUES(?, ?, ?, ?)");
-            stmt.setInt(1, clientId);
-            stmt.setString(2, account.getAccountType());
-            stmt.setBigDecimal(3, new BigDecimal(account.getBalance()));
-            if (account.getAccountType().toUpperCase().equals("C")) {
-                stmt.setFloat(4, ((CheckingAccount)account).getOverdraft());
-            } else {
-                stmt.setObject(4, null);
-            }
+			if (accId == -1) {
+				stmt = conn.prepareStatement("INSERT INTO ACCOUNTS(CLIENT_ID, ACCTYPE, BALANCE, OVERDRAFT) " +
+						"VALUES(?, ?, ?, ?)");
+				stmt.setInt(1, clientId);
+				stmt.setString(2, account.getAccountType());
+				stmt.setBigDecimal(3, new BigDecimal(account.getBalance()));
+				if (account.getAccountType().toUpperCase().equals("C")) {
+					stmt.setFloat(4, ((CheckingAccount) account).getOverdraft());
+				} else {
+					stmt.setObject(4, null);
+				}
 
-            if (stmt.executeUpdate() == 0) {
-                throw new DAOException("Impossible to save Account in DB. Transaction is rolled back");
-            }
-            ResultSet resultSet = stmt.getGeneratedKeys();
-            if (resultSet == null || !resultSet.next()) {
-                throw new DAOException("Impossible to save in DB. Can't get accountID.");
-            }
-            account.setId(resultSet.getInt(1));
-            account.setClientId(clientId);
-        } else {
-            stmt = conn.prepareStatement("UPDATE ACCOUNTS SET " +
-                    "CLIENT_ID = ?, ACCTYPE = ?, BALANCE = ?, OVERDRAFT = ?");
-            stmt.setInt(1, clientId);
-            stmt.setString(2, account.getAccountType());
-            stmt.setBigDecimal(3, new BigDecimal(account.getBalance()));
-            if (account.getAccountType().toUpperCase().equals("C")) {
-                stmt.setFloat(4, ((CheckingAccount)account).getOverdraft());
-            } else {
-                stmt.setObject(4, null);
-            }
-        }
-        baseDAO.closeConnection();
+				if (stmt.executeUpdate() == 0) {
+					throw new DAOException("Impossible to save Account in DB. Transaction is rolled back");
+				}
+				ResultSet resultSet = stmt.getGeneratedKeys();
+				if (resultSet == null || !resultSet.next()) {
+					throw new DAOException("Impossible to save in DB. Can't get accountID.");
+				}
+				account.setId(resultSet.getInt(1));
+				//account.setClientId(clientId);
+			} else {
+				stmt = conn.prepareStatement("UPDATE ACCOUNTS SET " +
+						"CLIENT_ID = ?, ACCTYPE = ?, BALANCE = ?, OVERDRAFT = ? WHERE ID = ?");
+
+				stmt.setInt(1, clientId);
+				stmt.setString(2, account.getAccountType());
+				stmt.setBigDecimal(3, new BigDecimal(account.getBalance()));
+				if (account.getAccountType().toUpperCase().equals("C")) {
+					stmt.setFloat(4, ((CheckingAccount) account).getOverdraft());
+				} else {
+					stmt.setObject(4, null);
+				}
+				stmt.setInt(5, accId);
+			}
+			System.out.println("Exec update");
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			baseDAO.closeConnection();
+		}
     }
 
     @Override
-    public void removeByClientId(int id) throws SQLException {
+    public void removeByClientId(int id) {
         BaseDAOImpl baseDAO = new BaseDAOImpl();
-        Connection conn = baseDAO.openConnection();
-        PreparedStatement stmt;
-        stmt = conn.prepareStatement("DELETE FROM ACCOUNTS WHERE CLIENT_ID = ?");
-        stmt.setInt(1, id);
-        stmt.executeUpdate();
-    }
+		try (Connection conn = baseDAO.openConnection()) {
+			PreparedStatement stmt;
+			stmt = conn.prepareStatement("DELETE FROM ACCOUNTS WHERE CLIENT_ID = ?");
+			stmt.setInt(1, id);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			baseDAO.closeConnection();
+		}
+	}
 
     @Override
     public List<Account> getClientAccounts(int id) {
         BaseDAOImpl baseDAO = new BaseDAOImpl();
-        Connection conn = baseDAO.openConnection();
         List<Account> accounts = new ArrayList<>();
-        try {
+        try (Connection conn = baseDAO.openConnection()) {
             PreparedStatement stmtAcc =
                     conn.prepareStatement("SELECT * FROM ACCOUNTS WHERE CLIENT_ID = ?");
             stmtAcc.setInt(1, id);
@@ -89,14 +101,13 @@ public class AccountDAOImpl implements AccountDAO {
                     accounts.add(new SavingAccount(balance.floatValue()));
                 }
                 accounts.get(i).setId(resultSet.getInt("ID"));
-                accounts.get(i).setClientId(id);
                 i++;
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-
-        baseDAO.closeConnection();
+        } finally {
+			baseDAO.closeConnection();
+		}
         return accounts;
     }
 }

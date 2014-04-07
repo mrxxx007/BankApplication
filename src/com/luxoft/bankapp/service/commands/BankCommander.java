@@ -1,5 +1,9 @@
 package com.luxoft.bankapp.service.commands;
 
+import com.luxoft.bankapp.data.BankDAO;
+import com.luxoft.bankapp.data.BankDAOImpl;
+import com.luxoft.bankapp.exceptions.ClientNotFoundException;
+import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.model.Bank;
 import com.luxoft.bankapp.model.Client;
 import java.io.BufferedReader;
@@ -27,10 +31,12 @@ public class BankCommander {
 	static {
 		commands.put(Integer.toString(commandNum++), new AddClientCommand());
 		commands.put(Integer.toString(commandNum++), new FindClientCommand());
+		commands.put(Integer.toString(commandNum++), new RemoveClientCommand());
 		commands.put(Integer.toString(commandNum++), new GetAccountsCommand());
 		commands.put(Integer.toString(commandNum++), new WithdrawCommand());
 		commands.put(Integer.toString(commandNum++), new DepositCommand());
 		commands.put(Integer.toString(commandNum++), new TransferCommand());
+		commands.put(Integer.toString(commandNum++), new ReportCommand());
 		commands.put(Integer.toString(commandNum++), new Command() {
 			@Override
 			public void execute() throws IOException {
@@ -76,6 +82,7 @@ public class BankCommander {
 	public static void startBankCommander(Bank bank) {
 		activeBank = bank;
 
+
 		String commandString;
 		InputStreamReader streamReader = new InputStreamReader(System.in);
 		BufferedReader bufferedReader = new BufferedReader(streamReader);
@@ -90,16 +97,18 @@ public class BankCommander {
 					throw new NumberFormatException();
 
 				commands.get(commandString).execute();
-			}
-			catch (NumberFormatException e) {
+			} catch (NumberFormatException e) {
 				System.out.println("Please, enter correct number");
 				continue;
-			}
-			catch (IndexOutOfBoundsException e) {
+			} catch (IndexOutOfBoundsException e) {
 				System.out.println("The command not found");
 				continue;
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (ClientNotFoundException e) {
+				System.out.println(e.getMessage());
+			} catch (DAOException e) {
+				System.out.println(e.getMessage());
 			}
 		}
 	}
@@ -113,8 +122,12 @@ public class BankCommander {
 	}
 
 	public static void main(String[] args) {
-		startBankCommander(new Bank(bankName));
-        //TODO Make initialize bank from DB
+		BankDAO bankDAO = new BankDAOImpl();
+		try {
+			startBankCommander(bankDAO.getBankByName(bankName));
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
