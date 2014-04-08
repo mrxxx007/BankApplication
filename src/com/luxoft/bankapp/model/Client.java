@@ -10,6 +10,7 @@ import com.sun.org.apache.xpath.internal.operations.Equals;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -80,7 +81,7 @@ public class Client implements Report, Serializable {
 	}
 
 	public List<Account> getAccounts() {
-		return accounts;
+		return Collections.unmodifiableList(accounts);
 	}
 
 	public void addAccount(Account account) {

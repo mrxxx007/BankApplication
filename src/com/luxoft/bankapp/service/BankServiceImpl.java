@@ -1,15 +1,34 @@
 package com.luxoft.bankapp.service;
 
-import com.luxoft.bankapp.exceptions.ClientExistsException;
+import com.luxoft.bankapp.DAO.BankDAOImpl;
+import com.luxoft.bankapp.DAO.ClientDAOImpl;
+import com.luxoft.bankapp.exceptions.*;
 import com.luxoft.bankapp.model.*;
 
 import java.io.*;
 
 /**
- * Created by user on 3/25/2014.
+ * Created by Sergey Popov on 3/25/2014.
  */
 public class BankServiceImpl implements BankService {
-    @Override
+	@Override
+	public Bank getBank(String bankName) throws DAOException {
+		return new BankDAOImpl().getBankByName(bankName);
+	}
+
+	/*@Override
+	public void deposit(Client client, float amount)
+			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
+		client.deposit(amount);
+		new ClientDAOImpl().save(client);
+	}*/
+
+	@Override
+	public Client findClientByName(Bank bank, String name) throws ClientNotFoundException {
+		return new ClientDAOImpl().findClientByName(bank, name);
+	}
+
+	@Override
     public void addClient(Bank bank, Client client) throws ClientExistsException {
 		bank.addClient(client);
 //        for (ClientRegistrationListener listener : bank.getListeners())
@@ -17,11 +36,23 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public void removeClient(Bank bank, Client client) {
-        bank.removeClient(client);
+    public void removeClient(Bank bank, Client client) throws DAOException {
+		new ClientDAOImpl().remove(client);
     }
 
-    @Override
+	@Override
+	public BankInfo getBankInfo(Bank bank) throws DAOException {
+		return new BankDAOImpl().getBankInfo(bank);
+	}
+
+	/*@Override
+	public void withdraw(Client client, float amount)
+			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
+		client.withdraw(amount);
+		new ClientDAOImpl().save(client);
+	}*/
+
+	@Override
     public  void addAccount(Client client, Account acc) {
         client.getAccounts().add(acc);
     }
@@ -31,19 +62,13 @@ public class BankServiceImpl implements BankService {
         client.setActiveAccount(account);
     }
 
-	@Override
-	public String getAccountTypeName(Account account) {
-		if (account.getClass().getName().equals(CheckingAccount.class.getName()))
-			return "Checking account";
-		else
-			return "Saving account";
-	}
+
 
 	@Override
 	public void saveClient(Client client) {
 		try {
 			ObjectOutputStream output = new ObjectOutputStream(new
-					FileOutputStream("data/client.obj"));
+					FileOutputStream("DAO/client.obj"));
 			output.writeObject(client);
 			output.close();
 		} catch (IOException e) {
@@ -57,7 +82,7 @@ public class BankServiceImpl implements BankService {
 		Client client = null;
 		try {
 			ObjectInputStream input = new ObjectInputStream(new
-					FileInputStream("data/client.obj"));
+					FileInputStream("DAO/client.obj"));
 			client = (Client)input.readObject();
 			input.close();
 		} catch (IOException e) {
