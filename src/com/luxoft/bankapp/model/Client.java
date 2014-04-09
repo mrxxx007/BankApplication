@@ -1,13 +1,9 @@
-package com.luxoft.bankapp.model; /**
+package com.luxoft.bankapp.model;
+/**
  * Created by Sergey Popov on 3/25/2014.
  */
 
-import com.luxoft.bankapp.exceptions.AccountNotFoundException;
-import com.luxoft.bankapp.exceptions.DataVerifyException;
 import com.luxoft.bankapp.exceptions.FeedException;
-import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
-import com.sun.org.apache.xpath.internal.operations.Equals;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,26 +54,6 @@ public class Client implements Report, Serializable {
 
 	public float getBalance() {
 		return activeAccount.getBalance();
-	}
-
-	public void deposit(float amount) throws DataVerifyException, NoEnoughFundsException, AccountNotFoundException {
-		if (activeAccount == null) {
-			throw new AccountNotFoundException("Active account not found. Please, set one of acounts as active");
-		}
-		if (amount < 0) {
-			throw new DataVerifyException("You can not deposit a negative amount");
-		}
-		activeAccount.deposit(amount);
-	}
-
-	public void withdraw(float amount) throws DataVerifyException, NoEnoughFundsException, AccountNotFoundException {
-		if (activeAccount == null) {
-			throw new AccountNotFoundException("Active account not found. Please, set one of acounts as active");
-		}
-		if (amount < 0) {
-			throw new DataVerifyException("You can not withdraw a negative amount");
-		}
-		activeAccount.withdraw(amount);
 	}
 
 	public List<Account> getAccounts() {

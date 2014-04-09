@@ -1,14 +1,12 @@
 package com.luxoft.bankapp.service;
 
-import com.luxoft.bankapp.DAO.AccountDAOImpl;
-import com.luxoft.bankapp.DAO.ClientDAOImpl;
+import com.luxoft.bankapp.dao.AccountDAOImpl;
 import com.luxoft.bankapp.exceptions.AccountNotFoundException;
 import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.exceptions.DataVerifyException;
 import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.luxoft.bankapp.model.Account;
 import com.luxoft.bankapp.model.CheckingAccount;
-import com.luxoft.bankapp.model.Client;
 
 /**
  * Created by Sergey Popov on 4/8/2014.
@@ -22,22 +20,21 @@ public class AccountServiceImpl implements AccountService {
 			return "Saving account";
 	}
 
-	/*@Override
-	public void withdraw(Client client, float amount) throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
-		client.withdraw(amount);
-		new ClientDAOImpl().save(client);
-	}*/
 	@Override
-	public void withdraw(Account account, float amount) throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
+	public void withdraw(int clientId, Account account, float amount) throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
 		account.withdraw(amount);
-		//client.withdraw(amount);
-		new ClientDAOImpl().save(client);
-		new AccountDAOImpl().save();
+		new AccountDAOImpl().save(account, clientId);
 	}
 
 	@Override
-	public void deposit(Client client, float amount) throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
-		client.deposit(amount);
-		new ClientDAOImpl().save(client);
+	public void deposit(int clientId, Account account, float amount)
+			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
+		account.deposit(amount);
+		new AccountDAOImpl().save(account, clientId);
+	}
+
+	@Override
+	public void saveToDB(Account account, int clientId) throws DAOException {
+		new AccountDAOImpl().save(account, clientId);
 	}
 }

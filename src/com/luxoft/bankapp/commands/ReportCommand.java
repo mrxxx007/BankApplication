@@ -1,6 +1,5 @@
 package com.luxoft.bankapp.commands;
 
-import com.luxoft.bankapp.DAO.BankDAOImpl;
 import com.luxoft.bankapp.exceptions.ClientNotFoundException;
 import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.main.BankCommander;

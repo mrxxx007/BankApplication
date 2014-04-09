@@ -6,6 +6,7 @@ import com.luxoft.bankapp.model.Client;
 import com.luxoft.bankapp.service.AccountServiceImpl;
 import com.luxoft.bankapp.service.BankService;
 import com.luxoft.bankapp.service.BankServiceImpl;
+import com.luxoft.bankapp.service.ClientServiceImpl;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -84,9 +85,7 @@ public class BankServer {
 							break;
 						case "withdraw":
 							try {
-								//activeClient.withdraw(Float.parseFloat(commandParam));
-								new AccountServiceImpl().withdraw(activeClient.getAccounts().get(0),
-										Float.parseFloat(commandParam));
+								new ClientServiceImpl().withdraw(activeClient, 0, Float.parseFloat(commandParam));
 								sendMessage("Operation complete successfully");
 							} catch (DataVerifyException e) {
 								sendMessage(e.getMessage());

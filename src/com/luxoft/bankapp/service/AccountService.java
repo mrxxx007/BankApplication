@@ -12,13 +12,14 @@ import com.luxoft.bankapp.model.Client;
  */
 public interface AccountService {
 	/**
-	 *
+	 * Return full account type name from account object
 	 * @param account
-	 * @return Full account name
+	 * @return
 	 */
 	String getAccountTypeName(Account account);
-	void withdraw(Account account, float amount)
+	void withdraw(int clientId, Account account, float amount)
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException;
-	void deposit(Client client, float amount)
+	void deposit(int clientId, Account account, float amount)
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException;
+	void saveToDB(Account account, int clientId) throws DAOException;
 }

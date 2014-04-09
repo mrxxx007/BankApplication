@@ -3,10 +3,7 @@ package com.luxoft.bankapp.commands;
 import com.luxoft.bankapp.exceptions.*;
 import com.luxoft.bankapp.main.BankCommander;
 import com.luxoft.bankapp.model.Client;
-import com.luxoft.bankapp.service.AccountService;
-import com.luxoft.bankapp.service.AccountServiceImpl;
-import com.luxoft.bankapp.service.BankService;
-import com.luxoft.bankapp.service.BankServiceImpl;
+import com.luxoft.bankapp.service.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,22 +30,15 @@ public class TransferCommand implements Command {
 			System.out.print("Enter receiver client name:\n -> ");
 			String clientName = bufferedReader.readLine();
 
-			//Client receiver = BankCommander.activeBank.findClientByName(clientName);
-			//Client receiver = new ClientDAOImpl().findClientByName(BankCommander.activeBank, clientName);
-			AccountService accountService = new AccountServiceImpl();
+			ClientService clientService = new ClientServiceImpl();
 			Client receiver = new BankServiceImpl().findClientByName(BankCommander.activeBank, clientName);
 			if (receiver == null) {
 				throw new NotFoundException("The receiver " + clientName + " not found");
 			}
 
-			//BankCommander.activeClient.withdraw(amount);
-			accountService.withdraw(BankCommander.activeClient.getAccounts().get(0), amount);
-			//receiver.deposit(amount);
-			accountService.deposit(receiver, amount);
+			clientService.withdraw(BankCommander.activeClient, 0, amount);
+			clientService.deposit(receiver, 0, amount);
 
-//			ClientDAO clientDAO = new ClientDAOImpl();
-//			clientDAO.save(BankCommander.activeClient);
-//			clientDAO.save(receiver);
 			System.out.printf("Transfer from %s to %s complete",
 					BankCommander.activeClient.getName(), receiver.getName());
 		}

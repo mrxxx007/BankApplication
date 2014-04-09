@@ -1,4 +1,4 @@
-package com.luxoft.bankapp.DAO;
+package com.luxoft.bankapp.dao;
 
 import com.luxoft.bankapp.exceptions.ClientNotFoundException;
 import com.luxoft.bankapp.exceptions.DAOException;
@@ -20,9 +20,8 @@ public class ClientDAOImpl implements ClientDAO {
     @Override
     public Client findClientByName(Bank bank, String name) throws ClientNotFoundException {
         BaseDAO baseDAO = new BaseDAOImpl();
-        Connection conn = baseDAO.openConnection();
         Client client = null;
-        try {
+        try (Connection conn = baseDAO.openConnection()) {
             PreparedStatement stmtClient =
                     conn.prepareStatement("SELECT * FROM CLIENTS WHERE NAME = ? AND BANK_ID = ?");
             stmtClient.setString(1, name);
@@ -40,6 +39,8 @@ public class ClientDAOImpl implements ClientDAO {
 				client.addAccounts(clientAccounts);
 				client.setActiveAccount(clientAccounts.get(0));
 			}
+			if (resultSet != null) { resultSet.close(); }
+			if (stmtClient != null) { stmtClient.close(); }
 		} catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -70,6 +71,9 @@ public class ClientDAOImpl implements ClientDAO {
 				client.addAccounts(clientAccounts);
 				client.setActiveAccount(clientAccounts.get(0));
 			}
+
+			if (resultSet != null) { resultSet.close(); }
+			if (stmtClient != null) { stmtClient.close(); }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -114,6 +118,9 @@ public class ClientDAOImpl implements ClientDAO {
 
 				clients.add(client);
 			}
+
+			if (resultSet != null) { resultSet.close(); }
+			if (stmt != null) { stmt.close(); }
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -137,18 +144,21 @@ public class ClientDAOImpl implements ClientDAO {
 					throw new DAOException("Impossible to save in DB. Can't get clientID.");
 				}
 				client.setId(resultSet.getInt(1));
+				if (resultSet != null) { resultSet.close(); }
 			} else {
 				stmtClient = getQuery(QueryType.UPDATE, client, conn);
 				if (stmtClient.executeUpdate() == 0) {
 					throw new DAOException("Impossible to update Client in DB. Transaction is rolled back");
 				}
-			}
 
+			}
+			if (stmtClient != null) { stmtClient.close(); }
 			AccountDAO accountDAO = new AccountDAOImpl();
 			for (Account acc : client.getAccounts()) {
 				System.out.println("Exec save acc");
 				accountDAO.save(acc, client.getId());
 			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -165,6 +175,7 @@ public class ClientDAOImpl implements ClientDAO {
 				throw new DAOException("Impossible to delete Client from DB. Transaction is rolled back");
 			}
 			new AccountDAOImpl().removeByClientId(client.getId());
+			if (stmtClient != null) { stmtClient.close(); }
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

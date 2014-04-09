@@ -49,7 +49,7 @@ public class BankClientBase {
 					generateAnsSendCmd(cmdNumber, bufferedReader);
 					System.out.println("");
 				} catch (ClassNotFoundException classNot) {
-					System.err.println("DAO received in unknown format");
+					System.err.println("dao received in unknown format");
 				} catch (DataVerifyException e) {
 					System.out.println(e.getMessage());
 				}

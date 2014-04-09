@@ -1,4 +1,4 @@
-package com.luxoft.bankapp.DAO;
+package com.luxoft.bankapp.dao;
 
 import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.model.Bank;
@@ -28,6 +28,8 @@ public class BankDAOImpl implements BankDAO {
 			}
 
 			bank.setId(rs.getInt("ID"));
+			if (rs != null) { rs.close(); }
+			if (stmt != null) { stmt.close(); }
 		} catch (SQLException ex) {
 			ex.printStackTrace();
 			return null;
@@ -51,12 +53,16 @@ public class BankDAOImpl implements BankDAO {
 				throw new DAOException("Can't calculate total number of clients");
 			}
 			bankInfo.setNumberOfClients(resultSet.getInt(1));
+			stmtClientsNum.close();
 
 			resultSet = stmtAccSum.executeQuery();
 			if (resultSet == null || !resultSet.next()) {
 				throw new DAOException("Can't calculate sum of all accounts of clients");
 			}
 			bankInfo.setTotalAccountSum(resultSet.getDouble(1));
+
+			if (resultSet != null) { resultSet.close(); }
+			if (stmtAccSum != null) { stmtAccSum.close(); }
 
 			List<Client> clients = new ClientDAOImpl().getAllClients(bank);
 			Map<String, List<Client>> clientsByCity = new TreeMap<>();

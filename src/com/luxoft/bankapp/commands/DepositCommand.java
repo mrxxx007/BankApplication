@@ -6,6 +6,7 @@ import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.luxoft.bankapp.exceptions.NotFoundException;
 import com.luxoft.bankapp.main.BankCommander;
 import com.luxoft.bankapp.service.BankServiceImpl;
+import com.luxoft.bankapp.service.ClientServiceImpl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,9 +29,7 @@ public class DepositCommand implements Command {
 			System.out.print("Enter amount to deposit:\n -> ");
 
 			float amount = Float.parseFloat(bufferedReader.readLine());
-			//BankCommander.activeClient.deposit(amount);
-			new BankServiceImpl().deposit(BankCommander.activeClient, amount);
-			//new ClientDAOImpl().save(BankCommander.activeClient);
+			new ClientServiceImpl().deposit(BankCommander.activeClient, 0, amount);
 		} catch (DataVerifyException e) {
 			System.out.println(e.getMessage());
 		} catch (NotFoundException e) {

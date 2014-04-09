@@ -1,4 +1,4 @@
-package com.luxoft.bankapp.DAO;
+package com.luxoft.bankapp.dao;
 
 import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.model.Account;
@@ -17,8 +17,9 @@ public class AccountDAOImpl implements AccountDAO {
     @Override
     public void save(Account account, int clientId) throws DAOException {
         BaseDAOImpl baseDAO = new BaseDAOImpl();
+		PreparedStatement stmt = null;
+
 		try (Connection conn = baseDAO.openConnection()) {
-			PreparedStatement stmt;
 			int accId = (account.getId());
 
 			if (accId == -1) {
@@ -41,6 +42,7 @@ public class AccountDAOImpl implements AccountDAO {
 					throw new DAOException("Impossible to save in DB. Can't get accountID.");
 				}
 				account.setId(resultSet.getInt(1));
+				resultSet.close();
 				//account.setClientId(clientId);
 			} else {
 				stmt = conn.prepareStatement("UPDATE ACCOUNTS SET " +
@@ -56,8 +58,8 @@ public class AccountDAOImpl implements AccountDAO {
 				}
 				stmt.setInt(5, accId);
 			}
-			System.out.println("Exec update");
 			stmt.executeUpdate();
+			if (stmt != null) {	stmt.close(); }
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -73,6 +75,7 @@ public class AccountDAOImpl implements AccountDAO {
 			stmt = conn.prepareStatement("DELETE FROM ACCOUNTS WHERE CLIENT_ID = ?");
 			stmt.setInt(1, id);
 			stmt.executeUpdate();
+			if (stmt != null) {	stmt.close(); }
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -102,6 +105,8 @@ public class AccountDAOImpl implements AccountDAO {
                 accounts.get(i).setId(resultSet.getInt("ID"));
                 i++;
             }
+			if (resultSet != null) { resultSet.close(); };
+			if (stmtAcc != null) { stmtAcc.close(); }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {

@@ -20,7 +20,8 @@ public class BankApplicationTest {
 	@Test
 	public void testSerializableClient() {
 		Bank bank = new Bank("Test");
-		BankServiceImpl bankService = new BankServiceImpl();
+		BankService bankService = new BankServiceImpl();
+		ClientService clientService = new ClientServiceImpl();
 
 		Client client1 = new Client(500);
 		client1.setName("Ivanov I.P.");
@@ -33,11 +34,11 @@ public class BankApplicationTest {
 			System.out.println(ex.getMessage());
 		}
 
-		bankService.addAccount(client1, new CheckingAccount(200f, 500f));
-		bankService.addAccount(client1, new SavingAccount(700f));
-		bankService.setActiveAccount(client1, client1.getAccounts().get(0));
-		bankService.saveClient(client1);
-		Client readedClient = bankService.loadClient();
+		//bankService.addAccount(client1, new CheckingAccount(200f, 500f));
+		//bankService.addAccount(client1, new SavingAccount(700f));
+		clientService.setActiveAccount(client1, client1.getAccounts().get(0));
+		clientService.saveClient(client1);
+		Client readedClient = clientService.loadClient();
 
 		assertNotNull(readedClient);
 		assertEquals("Ivanov I.P.", readedClient.getName());
