@@ -1,5 +1,6 @@
 package com.luxoft.bankapp.model;
 
+import com.luxoft.bankapp.annotations.NoDB;
 import com.luxoft.bankapp.exceptions.ClientExistsException;
 import com.luxoft.bankapp.service.BankReport;
 import com.luxoft.bankapp.service.ClientRegistrationListener;
@@ -10,23 +11,26 @@ import java.util.*;
  * Created by user on 3/25/2014.
  */
 public class Bank implements Report {
-    private int id;
+    @NoDB
+	private int id;
     private String name;
     private List<Client> clientsList = new ArrayList<Client>();
+	@NoDB
 	private Map<String, Client> clients = new HashMap<String, Client>();
-
-    List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();
+	@NoDB
+	List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();
 
     public Bank(String name) {
         this.name = name;
 
+		//registerListener(new PrintClientListener());
 		registerListener(new ClientRegistrationListener() {
 			@Override
 			public void onClientAdded(Client c) {
 				clients.put(c.getName(), c);
 			}
 		});
-        //registerListener(new PrintClientListener());
+
         //registerListener(new EmailNotificationListener());
     }
 

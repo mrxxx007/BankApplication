@@ -105,6 +105,7 @@ public class AccountDAOImpl implements AccountDAO {
                 accounts.get(i).setId(resultSet.getInt("ID"));
                 i++;
             }
+
 			if (resultSet != null) { resultSet.close(); };
 			if (stmtAcc != null) { stmtAcc.close(); }
         } catch (SQLException e) {
@@ -114,4 +115,5 @@ public class AccountDAOImpl implements AccountDAO {
 		}
         return accounts;
     }
+
 }

@@ -42,6 +42,7 @@ public class ClientDAOImplTest {
 		// should be exception
 		fromDB = clientDAO.findClientByName(bank, "IvanovTestName");
 		assertNull(fromDB);
+
     }
 
     @Test

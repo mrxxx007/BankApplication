@@ -1,13 +1,15 @@
 package com.luxoft.bankapp.model;
 
+import com.luxoft.bankapp.annotations.NoDB;
+
 import java.io.Serializable;
 
 /**
  * Created by Sergey Popov on 3/25/2014.
  */
 public abstract class AbstractAccount implements Account, Serializable {
-	protected int id = -1;
-    protected String accountType;
+	@NoDB protected int id = -1;
+	@NoDB protected String accountType;
 	protected float balance;
 
     @Override

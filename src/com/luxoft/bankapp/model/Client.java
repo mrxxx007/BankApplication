@@ -3,6 +3,7 @@ package com.luxoft.bankapp.model;
  * Created by Sergey Popov on 3/25/2014.
  */
 
+import com.luxoft.bankapp.annotations.NoDB;
 import com.luxoft.bankapp.exceptions.FeedException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,17 +12,18 @@ import java.util.List;
 import java.util.Map;
 
 public class Client implements Report, Serializable {
-	private int id = -1;
+	@NoDB private int id = -1;
     private int bankId;
 	private String name;
 	private List<Account> accounts = new ArrayList<Account>();
-	private Account activeAccount;
-	private float initialOverdraft;
+	@NoDB private Account activeAccount;
+	@NoDB private float initialOverdraft;
 	private Gender gender;
 	private String email;
 	private String phone;
 	private String city;
 
+	//region Constructors
 	public Client() {
 		initialOverdraft = 300;
 	}
@@ -38,6 +40,7 @@ public class Client implements Report, Serializable {
         this(name, initialOverdraft);
         this.id = id;
     }
+	//endregion
 
 	@Override
 	public void printReport() {
