@@ -47,11 +47,15 @@ public class SavingAccount extends AbstractAccount {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
+        try {
+            if (this == obj) return true;
+            if (obj == null) return false;
 
-		final SavingAccount other = (SavingAccount)obj;
-		if (balance != other.balance) return false;
+            final SavingAccount other = (SavingAccount)obj;
+            if (balance != other.balance) return false;
+        } catch (ClassCastException e) {
+            return false;
+        }
 
 		return true;
 	}

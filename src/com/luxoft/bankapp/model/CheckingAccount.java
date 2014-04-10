@@ -63,12 +63,16 @@ public class CheckingAccount extends AbstractAccount {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj) return true;
-		if (obj == null) return false;
+		try {
+            if (this == obj) return true;
+            if (obj == null) return false;
 
-		final CheckingAccount other = (CheckingAccount)obj;
-		if (balance != other.balance) return false;
-		if (overdraft != other.overdraft) return false;
+            final CheckingAccount other = (CheckingAccount)obj;
+            if (balance != other.balance) return false;
+            if (overdraft != other.overdraft) return false;
+        } catch (ClassCastException e) {
+            return false;
+        }
 
 		return true;
 	}

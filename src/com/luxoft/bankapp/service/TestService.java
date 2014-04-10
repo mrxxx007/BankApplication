@@ -24,8 +24,6 @@ public class TestService {
 		Class<?> o2Class = o2.getClass();
 
 		if (!o1Class.getName().equals(o2Class.getName())) {
-			//System.out.println("Bank names not equals");
-			//System.out.println(o1Class.getName() + " " + o2Class.getName());
 			return false;
 		}
 
@@ -33,31 +31,28 @@ public class TestService {
 		Field[] o2Fields = o2Class.getDeclaredFields();
 
 		for (int i = 0; i < o1Fields.length; i++) {
-			//System.out.print(o1Fields[i].getType() + " ");
-			//System.out.println(Map.class.isAssignableFrom(o1Fields[i].getType()));
-
 			o1Fields[i].setAccessible(true);
-			//System.out.println(o1Fields[i].getAnnotation(NoDB.class));
 			if (o1Fields[i].getAnnotation(NoDB.class) != null) {
 				continue;
 			}
 
-			//System.out.println(o1Fields[i]);
+            if (!o1Fields[i].equals(o2Fields[i])) {
+                return false;
+            }
+
 			if (Collection.class.isAssignableFrom(o1Fields[i].getType())) {
-				Iterator iterator = ((Collection)o1Fields[i].get(o1)).iterator();
-				while (iterator.hasNext()) {
-					//System.out.println(iterator.next());
-				}
-				//System.out.println("Collection");
-				//System.out.println(o1Fields[i].getGenericType());
+                Object[] o1Collect = ((Collection)o1Fields[i].get(o1)).toArray();
+                Object[] o2Collect = ((Collection)o1Fields[i].get(o2)).toArray();
+                for (int k = 0; k < o1Collect.length; k++) {
+                    if (o1Collect[k] == null && o2Collect[k] == null) {
+                        continue;
+                    } else if (o1Collect[k] == null || o2Collect[k] == null) {
+                        return false;
+                    } else if (!o1Collect[k].equals(o2Collect[k])) {
+                        return false;
+                    }
+                }
 			}
-
-			//System.out.println(o1Fields[i]);
-			if (!o1Fields[i].equals(o2Fields[i])) {
-				return false;
-			}
-			//System.out.println("true");
-
 		}
 		return true;
 	}

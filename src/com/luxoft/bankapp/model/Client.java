@@ -47,7 +47,11 @@ public class Client implements Report, Serializable {
 		System.out.println(this);
 	}
 
-	public void setActiveAccount(Account a) {
+    public void setInitialOverdraft(float initialOverdraft) {
+        this.initialOverdraft = initialOverdraft;
+    }
+
+    public void setActiveAccount(Account a) {
 		activeAccount = a;
 	}
 
@@ -148,13 +152,22 @@ public class Client implements Report, Serializable {
 	public boolean equals(Object obj) {
 		if (this == obj) return true;
 		if (obj == null) return false;
+        boolean result;
 
 		final Client other = (Client) obj;
 		if (!name.equals(other.name)) return false;
 		if (gender != other.gender) return false;
-		if (!email.equals(other.email)) return false;
-		if (!phone.equals(other.phone)) return false;
+		//if (!email.equals(other.email)) return false;
+        result = email == null ? other.email == null : email.equals(other.email);
+		if (!result) return result;
 
+        //if (!phone.equals(other.phone)) return false;
+        result = phone == null ? other.phone == null : phone.equals(other.phone);
+        if (!result) return result;
+
+        //if (!city.equals(other.city)) return false;
+        result = city == null ? other.city == null : city.equals(other.city);
+        if (!result) return result;
 		return true;
 	}
 
