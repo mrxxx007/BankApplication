@@ -20,8 +20,8 @@ public class BankApplicationTest {
 	@Test
 	public void testSerializableClient() {
 		Bank bank = new Bank("Test");
-		BankService bankService = new BankServiceImpl();
-		ClientService clientService = new ClientServiceImpl();
+		//BankService bankService = new BankServiceImpl();
+		//ClientService clientService = new ClientServiceImpl();
 
 		Client client1 = new Client(500);
 		client1.setName("Ivanov I.P.");
@@ -29,16 +29,16 @@ public class BankApplicationTest {
 		client1.setCity("Moscow");
 
 		try {
-			bankService.addClient(bank, client1);
+			ServiceFactory.getBankService().addClient(bank, client1);
 		} catch (ClientExistsException ex) {
 			System.out.println(ex.getMessage());
 		}
 
 		//bankService.addAccount(client1, new CheckingAccount(200f, 500f));
 		//bankService.addAccount(client1, new SavingAccount(700f));
-		clientService.setActiveAccount(client1, client1.getAccounts().get(0));
-		clientService.saveClient(client1);
-		Client readedClient = clientService.loadClient();
+		ServiceFactory.getClientService().setActiveAccount(client1, client1.getAccounts().get(0));
+		ServiceFactory.getClientService().saveClient(client1);
+		Client readedClient = ServiceFactory.getClientService().loadClient();
 
 		assertNotNull(readedClient);
 		assertEquals("Ivanov I.P.", readedClient.getName());

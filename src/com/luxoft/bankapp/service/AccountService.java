@@ -22,4 +22,5 @@ public interface AccountService {
 	void deposit(int clientId, Account account, float amount)
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException;
 	void saveToDB(Account account, int clientId) throws DAOException;
+	void transfer(Account from, Account to, float amount) throws NoEnoughFundsException;
 }

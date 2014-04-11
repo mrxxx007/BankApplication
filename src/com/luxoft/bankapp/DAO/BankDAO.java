@@ -20,4 +20,5 @@ public interface BankDAO {
 	 * Should fill the BankInfo
 	 */
 	BankInfo getBankInfo(Bank bank) throws DAOException;
+
 }

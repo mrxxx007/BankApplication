@@ -1,6 +1,5 @@
 package com.luxoft.bankapp.service;
 
-import com.luxoft.bankapp.dao.ClientDAOImpl;
 import com.luxoft.bankapp.exceptions.AccountNotFoundException;
 import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.exceptions.DataVerifyException;
@@ -15,21 +14,33 @@ import java.io.*;
  * Created by Sergey Popov on 4/8/2014.
  */
 public class ClientServiceImpl implements ClientService {
+	private static ClientServiceImpl instance;
+
+	private ClientServiceImpl() {
+
+	}
+
+	public static ClientServiceImpl getInstance() {
+		return instance == null ?
+				instance = new ClientServiceImpl() :
+				instance;
+	}
+
 	@Override
 	public void saveClientToDB(Client client) throws DAOException {
-		new ClientDAOImpl().save(BankCommander.activeClient);
+		ServiceFactory.getClientDAO().save(BankCommander.activeClient);
 	}
 
 	@Override
 	public void withdraw(Client client, int accountIndex, float amount)
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
-		new AccountServiceImpl().withdraw(client.getId(), client.getAccounts().get(accountIndex), amount);
+		ServiceFactory.getAccountService().withdraw(client.getId(), client.getAccounts().get(accountIndex), amount);
 	}
 
 	@Override
 	public void deposit(Client client, int accountIndex, float amount)
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
-		new AccountServiceImpl().deposit(client.getId(), client.getAccounts().get(accountIndex), amount);
+		ServiceFactory.getAccountService().deposit(client.getId(), client.getAccounts().get(accountIndex), amount);
 	}
 
 	@Override

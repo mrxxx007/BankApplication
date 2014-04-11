@@ -14,7 +14,7 @@ public interface AccountDAO {
      * Save Account in database
      * @param account
      */
-    public void save(Account account, int clientId) throws SQLException, DAOException;
+    public void save(Account account, int clientId) throws DAOException;
 
     /**
      * Remove all accounts of client

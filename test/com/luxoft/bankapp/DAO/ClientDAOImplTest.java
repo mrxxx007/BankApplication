@@ -4,6 +4,8 @@ import com.luxoft.bankapp.exceptions.ClientNotFoundException;
 import com.luxoft.bankapp.model.Bank;
 import com.luxoft.bankapp.model.Client;
 import com.luxoft.bankapp.model.Gender;
+import com.luxoft.bankapp.service.ServiceFactory;
+import com.luxoft.bankapp.service.TestService;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -17,7 +19,7 @@ public class ClientDAOImplTest {
 
     @Before
     public void setUp() throws Exception {
-		bank = new BankDAOImpl().getBankByName("My Bank");
+		bank = ServiceFactory.getBankDAO().getBankByName("My Bank");
 
 		client1.setName("IvanovTestName");
         client1.setGender(Gender.MALE);
@@ -29,8 +31,8 @@ public class ClientDAOImplTest {
 
     @Test (expected = ClientNotFoundException.class)
     public void testFindClientByName() throws Exception {
-        ClientDAOImpl clientDAO = new ClientDAOImpl();
-        Bank bank = new BankDAOImpl().getBankByName("My Bank");
+        ClientDAO clientDAO = ServiceFactory.getClientDAO();
+        Bank bank = ServiceFactory.getBankDAO().getBankByName("My Bank");
 		assertNotNull(bank);
 
         clientDAO.save(client1);
@@ -42,6 +44,7 @@ public class ClientDAOImplTest {
 		// should be exception
 		fromDB = clientDAO.findClientByName(bank, "IvanovTestName");
 		assertNull(fromDB);
+
 
     }
 
@@ -57,8 +60,25 @@ public class ClientDAOImplTest {
 
     @Test
     public void testSave() throws Exception {
+		// Testing insert
+		ClientDAO clientDAO = ServiceFactory.getClientDAO();
+		clientDAO.save(client1);
+		assertTrue(client1.getId() != -1);
 
-    }
+		Client client2 = clientDAO.findClientById(client1.getId());
+		assertTrue(TestService.isEquals(client1, client2));
+
+		// Testing update
+		int clientId = client2.getId();
+		client1.setCity("Moscow");
+		client1.setPhone("+74951234567");
+		clientDAO.save(client1);
+
+		client2 = clientDAO.findClientById(clientId);
+		assertTrue(TestService.isEquals(client1, client2));
+
+		clientDAO.remove(client1);
+	}
 
     @Test
     public void testRemove() throws Exception {

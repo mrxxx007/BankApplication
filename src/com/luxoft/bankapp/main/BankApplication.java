@@ -2,9 +2,8 @@ package com.luxoft.bankapp.main;
 
 import com.luxoft.bankapp.model.*;
 import com.luxoft.bankapp.exceptions.*;
-import com.luxoft.bankapp.service.BankFeedService;
-import com.luxoft.bankapp.service.BankServiceImpl;
 import com.luxoft.bankapp.commands.Command;
+import com.luxoft.bankapp.service.ServiceFactory;
 
 import java.io.IOException;
 
@@ -15,7 +14,7 @@ public class BankApplication {
     public static void main(String[] args) {
 		Bank bank = null;
 		try {
-			bank = new BankServiceImpl().getBank("My Bank");
+			bank = ServiceFactory.getBankService().getBank("My Bank");
 		} catch (DAOException e) {
 			System.out.println(e.getMessage());
 		}

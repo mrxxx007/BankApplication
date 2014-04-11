@@ -1,7 +1,7 @@
 package com.luxoft.bankapp.main;
 
-import com.luxoft.bankapp.dao.BankDAOImpl;
 import com.luxoft.bankapp.commands.*;
+import com.luxoft.bankapp.service.ServiceFactory;
 import com.luxoft.bankapp.exceptions.ClientNotFoundException;
 import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.model.Bank;
@@ -124,7 +124,7 @@ public class BankCommander {
 	public static void main(String[] args) {
 
 		try {
-			startBankCommander(new BankDAOImpl().getBankByName(bankName));
+			startBankCommander(ServiceFactory.getBankDAO().getBankByName(bankName));
 		} catch (DAOException e) {
 			System.out.println(e.getMessage());
 		}

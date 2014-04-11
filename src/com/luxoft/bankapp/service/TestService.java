@@ -20,38 +20,42 @@ public class TestService {
 	 * также он должен уметь сравнивать коллекции.
 	 */
 	public static boolean isEquals(Object o1, Object o2) throws IllegalAccessException {
-		Class<?> o1Class = o1.getClass();
-		Class<?> o2Class = o2.getClass();
 
-		if (!o1Class.getName().equals(o2Class.getName())) {
+		if (!o1.getClass().getName().equals(o2.getClass().getName())) {
 			return false;
 		}
 
-		Field[] o1Fields = o1Class.getDeclaredFields();
-		Field[] o2Fields = o2Class.getDeclaredFields();
+		Field[] oFields = o1.getClass().getDeclaredFields();
 
-		for (int i = 0; i < o1Fields.length; i++) {
-			o1Fields[i].setAccessible(true);
-			if (o1Fields[i].getAnnotation(NoDB.class) != null) {
+		for (int i = 0; i < oFields.length; i++) {
+			oFields[i].setAccessible(true);
+			if (oFields[i].getAnnotation(NoDB.class) != null) {
 				continue;
 			}
 
-            if (!o1Fields[i].equals(o2Fields[i])) {
-                return false;
-            }
-
-			if (Collection.class.isAssignableFrom(o1Fields[i].getType())) {
-                Object[] o1Collect = ((Collection)o1Fields[i].get(o1)).toArray();
-                Object[] o2Collect = ((Collection)o1Fields[i].get(o2)).toArray();
-                for (int k = 0; k < o1Collect.length; k++) {
-                    if (o1Collect[k] == null && o2Collect[k] == null) {
-                        continue;
-                    } else if (o1Collect[k] == null || o2Collect[k] == null) {
-                        return false;
-                    } else if (!o1Collect[k].equals(o2Collect[k])) {
-                        return false;
-                    }
-                }
+			// if collection
+			if (Collection.class.isAssignableFrom(oFields[i].getType())) {
+                Object[] o1Collect = ((Collection)oFields[i].get(o1)).toArray();
+                Object[] o2Collect = ((Collection)oFields[i].get(o2)).toArray();
+				if (oFields[i].get(o1) instanceof Set<?>) {
+					return ((Set)o1Collect[i]).containsAll(((Set)o2Collect[i]));
+				} else if (oFields[i].get(o1) instanceof List<?>) {
+					for (int k = 0; k < o1Collect.length; k++) {
+						boolean result = o1Collect[k] == null ?
+								o2Collect[k] == null :
+								TestService.isEquals(o1Collect[k], o2Collect[k]);
+						if (!result) {
+							return false;
+						}
+					}
+				}
+			} else { // if not collection
+				boolean result = oFields[i].get(o1) == null ?
+						oFields[i].get(o2) == null :
+						oFields[i].get(o1).equals(oFields[i].get(o2));
+				if (!result) {
+					return false;
+				}
 			}
 		}
 		return true;

@@ -6,6 +6,8 @@ import com.luxoft.bankapp.model.Account;
 import com.luxoft.bankapp.model.Bank;
 import com.luxoft.bankapp.model.Client;
 import com.luxoft.bankapp.model.Gender;
+import com.luxoft.bankapp.service.ServiceFactory;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,6 +19,18 @@ import java.util.List;
  * Created by Sergey Popov on 06.04.14.
  */
 public class ClientDAOImpl implements ClientDAO {
+	private static ClientDAOImpl instance;
+
+	private ClientDAOImpl() {
+
+	}
+
+	public static ClientDAOImpl getInstance() {
+		return instance == null ?
+				instance = new ClientDAOImpl() :
+				instance;
+	}
+
     @Override
     public Client findClientByName(Bank bank, String name) throws ClientNotFoundException {
         BaseDAO baseDAO = new BaseDAOImpl();
@@ -34,7 +48,7 @@ public class ClientDAOImpl implements ClientDAO {
 
             client = extractClientFromResultSet(resultSet);
 
-			List<Account> clientAccounts = new AccountDAOImpl().getClientAccounts(client.getId());
+			List<Account> clientAccounts = ServiceFactory.getAccountDAO().getClientAccounts(client.getId());
 			if (clientAccounts.size() > 0) {
 				client.addAccounts(clientAccounts);
 				client.setActiveAccount(clientAccounts.get(0));
@@ -66,7 +80,7 @@ public class ClientDAOImpl implements ClientDAO {
 
             client = extractClientFromResultSet(resultSet);
 
-			List<Account> clientAccounts = new AccountDAOImpl().getClientAccounts(client.getId());
+			List<Account> clientAccounts = ServiceFactory.getAccountDAO().getClientAccounts(client.getId());
             if (clientAccounts.size() > 0) {
 				client.addAccounts(clientAccounts);
 				client.setActiveAccount(clientAccounts.get(0));
@@ -110,7 +124,7 @@ public class ClientDAOImpl implements ClientDAO {
 				client.setCity(city);
 				client.setBankId(bankId);
 
-				List<Account> clientAccounts = new AccountDAOImpl().getClientAccounts(client.getId());
+				List<Account> clientAccounts = ServiceFactory.getAccountDAO().getClientAccounts(client.getId());
 				if (clientAccounts.size() > 0) {
 					client.addAccounts(clientAccounts);
 					client.setActiveAccount(clientAccounts.get(0));
@@ -153,10 +167,10 @@ public class ClientDAOImpl implements ClientDAO {
 
 			}
 			if (stmtClient != null) { stmtClient.close(); }
-			AccountDAO accountDAO = new AccountDAOImpl();
+
 			for (Account acc : client.getAccounts()) {
 				System.out.println("Exec save acc");
-				accountDAO.save(acc, client.getId());
+				ServiceFactory.getAccountDAO().save(acc, client.getId());
 			}
 
 		} catch (SQLException e) {
@@ -174,7 +188,7 @@ public class ClientDAOImpl implements ClientDAO {
 			if (stmtClient.executeUpdate() == 0) {
 				throw new DAOException("Impossible to delete Client from DB. Transaction is rolled back");
 			}
-			new AccountDAOImpl().removeByClientId(client.getId());
+			ServiceFactory.getAccountDAO().removeByClientId(client.getId());
 			if (stmtClient != null) { stmtClient.close(); }
 		} catch (SQLException e) {
 			e.printStackTrace();

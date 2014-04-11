@@ -30,28 +30,23 @@ public class TransferCommand implements Command {
 			System.out.print("Enter receiver client name:\n -> ");
 			String clientName = bufferedReader.readLine();
 
-			ClientService clientService = new ClientServiceImpl();
-			Client receiver = new BankServiceImpl().findClientByName(BankCommander.activeBank, clientName);
+			//ClientService clientService = new ClientServiceImpl();
+			Client receiver = ServiceFactory.getBankService().findClientByName(BankCommander.activeBank, clientName);
 			if (receiver == null) {
 				throw new NotFoundException("The receiver " + clientName + " not found");
 			}
 
-			clientService.withdraw(BankCommander.activeClient, 0, amount);
-			clientService.deposit(receiver, 0, amount);
+			ServiceFactory.getAccountService().transfer(BankCommander.activeClient.getAccounts().get(0),
+					receiver.getAccounts().get(0), amount);
 
 			System.out.printf("Transfer from %s to %s complete",
 					BankCommander.activeClient.getName(), receiver.getName());
-		}
-		catch (DataVerifyException e) {
-			System.out.println(e.getMessage());
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (NoEnoughFundsException e) {
 			System.out.println(e.getMessage());
 		} catch (NotFoundException e) {
 			System.out.println(e.getMessage());
-		} catch (DAOException e) {
-			e.printStackTrace();
 		}
 	}
 

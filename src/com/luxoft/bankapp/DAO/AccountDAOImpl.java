@@ -14,6 +14,18 @@ import java.util.List;
  * Created by Sergey Popov on 06.04.14.
  */
 public class AccountDAOImpl implements AccountDAO {
+	private static AccountDAOImpl instance;
+
+	private AccountDAOImpl() {
+
+	}
+
+	public static AccountDAOImpl getInstance() {
+		return instance == null ?
+				instance = new AccountDAOImpl() :
+				instance;
+	}
+
     @Override
     public void save(Account account, int clientId) throws DAOException {
         BaseDAOImpl baseDAO = new BaseDAOImpl();

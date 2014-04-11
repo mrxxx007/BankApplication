@@ -4,6 +4,7 @@ import com.luxoft.bankapp.exceptions.ClientNotFoundException;
 import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.main.BankCommander;
 import com.luxoft.bankapp.service.BankServiceImpl;
+import com.luxoft.bankapp.service.ServiceFactory;
 
 /**
  * Created by Sergey Popov on 4/7/2014.
@@ -15,7 +16,7 @@ public class RemoveClientCommand implements Command {
 			throw new ClientNotFoundException("Active client not found. Please, find the client you need first");
 		}
 
-		new BankServiceImpl().removeClient(BankCommander.activeBank, BankCommander.activeClient);
+		ServiceFactory.getBankService().removeClient(BankCommander.activeBank, BankCommander.activeClient);
 		BankCommander.activeClient = null;
 	}
 

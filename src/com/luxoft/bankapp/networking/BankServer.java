@@ -3,10 +3,7 @@ package com.luxoft.bankapp.networking;
 import com.luxoft.bankapp.exceptions.*;
 import com.luxoft.bankapp.model.Bank;
 import com.luxoft.bankapp.model.Client;
-import com.luxoft.bankapp.service.AccountServiceImpl;
-import com.luxoft.bankapp.service.BankService;
-import com.luxoft.bankapp.service.BankServiceImpl;
-import com.luxoft.bankapp.service.ClientServiceImpl;
+import com.luxoft.bankapp.service.*;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -85,7 +82,7 @@ public class BankServer {
 							break;
 						case "withdraw":
 							try {
-								new ClientServiceImpl().withdraw(activeClient, 0, Float.parseFloat(commandParam));
+								ServiceFactory.getClientService().withdraw(activeClient, 0, Float.parseFloat(commandParam));
 								sendMessage("Operation complete successfully");
 							} catch (DataVerifyException e) {
 								sendMessage(e.getMessage());
@@ -98,7 +95,7 @@ public class BankServer {
 						case "addClient":
 							Client client = (Client)in.readObject();
 							//activeBank.addClient(client);
-							new BankServiceImpl().addClient(activeBank, client);
+							ServiceFactory.getBankService().addClient(activeBank, client);
 							sendMessage("The client was successfully added");
 							break;
 						case "getClientInfo":
@@ -110,12 +107,12 @@ public class BankServer {
 							break;
 						case "deleteClient":
 							//Client findingClient = activeBank.findClientByName(commandParam);
-							BankService bankService = new BankServiceImpl();
-							Client findingClient = bankService.findClientByName(activeBank, commandParam);
+							//BankService bankService = new BankServiceImpl();
+							Client findingClient = ServiceFactory.getBankService().findClientByName(activeBank, commandParam);
 							if (findingClient == null) {
 								throw new ClientNotFoundException(commandParam);
 							} else {
-								bankService.removeClient(activeBank, findingClient);
+								ServiceFactory.getBankService().removeClient(activeBank, findingClient);
 								sendMessage("The client removed successfully");
 							}
 							break;
@@ -159,14 +156,14 @@ public class BankServer {
 
 	private boolean findClientAndSetActive(String clientName) throws ClientNotFoundException {
 		return (activeClient =
-				new BankServiceImpl().findClientByName(activeBank, clientName)) != null;
+				ServiceFactory.getBankService().findClientByName(activeBank, clientName)) != null;
 
 	}
 
 	public static void main(final String args[]) {
 		BankServer server = new BankServer();
 		try {
-			server.activeBank = new BankServiceImpl().getBank("My Bank");
+			server.activeBank = ServiceFactory.getBankService().getBank("My Bank");
 		} catch (DAOException e) {
 			System.out.println(e.getMessage());
 		}

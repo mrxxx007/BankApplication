@@ -52,8 +52,5 @@ public class TestServiceTest {
 	@Test
 	public void testIsEquals() throws Exception {
 		assertTrue(TestService.isEquals(bank1, bank2));
-
-
-
 	}
 }

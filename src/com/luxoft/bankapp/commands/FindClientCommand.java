@@ -2,7 +2,7 @@ package com.luxoft.bankapp.commands;
 
 import com.luxoft.bankapp.exceptions.ClientNotFoundException;
 import com.luxoft.bankapp.main.BankCommander;
-import com.luxoft.bankapp.service.BankServiceImpl;
+import com.luxoft.bankapp.service.ServiceFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -41,7 +41,7 @@ public class FindClientCommand implements Command {
 			System.out.print("Enter client name:\n -> ");
 			String clientName = bufferedReader.readLine();
 			BankCommander.activeClient =
-					new BankServiceImpl().findClientByName(BankCommander.activeBank, clientName);
+					ServiceFactory.getBankService().findClientByName(BankCommander.activeBank, clientName);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -1,12 +1,11 @@
 package com.luxoft.bankapp.commands;
 
-import com.luxoft.bankapp.dao.ClientDAOImpl;
+import com.luxoft.bankapp.service.ServiceFactory;
 import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.exceptions.DataVerifyException;
 import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.luxoft.bankapp.exceptions.NotFoundException;
 import com.luxoft.bankapp.main.BankCommander;
-import com.luxoft.bankapp.service.ClientServiceImpl;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -28,8 +27,8 @@ public class WithdrawCommand implements Command {
 			System.out.print("Enter amount you want to withdraw: ");
 			float amount = Float.parseFloat(bufferedReader.readLine());
 
-			new ClientServiceImpl().withdraw(BankCommander.activeClient, 0, amount);
-			new ClientDAOImpl().save(BankCommander.activeClient);
+			ServiceFactory.getClientService().withdraw(BankCommander.activeClient, 0, amount);
+			ServiceFactory.getClientDAO().save(BankCommander.activeClient);
 		} catch (DataVerifyException e) {
 			System.out.println(e.getMessage());
 		} catch (NoEnoughFundsException e) {

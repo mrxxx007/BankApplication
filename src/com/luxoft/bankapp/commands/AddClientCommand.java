@@ -5,8 +5,7 @@ import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.exceptions.DataVerifyException;
 import com.luxoft.bankapp.main.BankCommander;
 import com.luxoft.bankapp.model.*;
-import com.luxoft.bankapp.service.BankServiceImpl;
-import com.luxoft.bankapp.service.ClientServiceImpl;
+import com.luxoft.bankapp.service.ServiceFactory;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -75,12 +74,12 @@ public class AddClientCommand implements Command {
 		try {
 			BankCommander.activeClient = getClientInfoDialog();
 			if (BankCommander.activeClient != null) {
-				new BankServiceImpl().addClient(BankCommander.activeBank, BankCommander.activeClient);
+				ServiceFactory.getBankService().addClient(BankCommander.activeBank, BankCommander.activeClient);
 				//BankCommander.activeBank.addClient(BankCommander.activeClient);
 			}
 
 			//new ClientDAOImpl().save(BankCommander.activeClient);
-			new ClientServiceImpl().saveClientToDB(BankCommander.activeClient);
+			ServiceFactory.getClientService().saveClientToDB(BankCommander.activeClient);
 		}
 		catch (DataVerifyException ex) {
 			System.out.println(ex.getMessage());

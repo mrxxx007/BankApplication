@@ -1,7 +1,5 @@
 package com.luxoft.bankapp.service;
 
-import com.luxoft.bankapp.dao.BankDAOImpl;
-import com.luxoft.bankapp.dao.ClientDAOImpl;
 import com.luxoft.bankapp.exceptions.*;
 import com.luxoft.bankapp.model.*;
 
@@ -9,14 +7,26 @@ import com.luxoft.bankapp.model.*;
  * Created by Sergey Popov on 3/25/2014.
  */
 public class BankServiceImpl implements BankService {
+	private static BankServiceImpl instance;
+
+	private BankServiceImpl() {
+
+	}
+
+	public static BankServiceImpl getInstance() {
+		return instance == null ?
+				instance = new BankServiceImpl() :
+				instance;
+	}
+
 	@Override
 	public Bank getBank(String bankName) throws DAOException {
-		return new BankDAOImpl().getBankByName(bankName);
+		return ServiceFactory.getBankDAO().getBankByName(bankName);
 	}
 
 	@Override
 	public Client findClientByName(Bank bank, String name) throws ClientNotFoundException {
-		return new ClientDAOImpl().findClientByName(bank, name);
+		return ServiceFactory.getClientDAO().findClientByName(bank, name);
 	}
 
 	@Override
@@ -28,12 +38,12 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public void removeClient(Bank bank, Client client) throws DAOException {
-		new ClientDAOImpl().remove(client);
+		ServiceFactory.getClientDAO().remove(client);
     }
 
 	@Override
 	public BankInfo getBankInfo(Bank bank) throws DAOException {
-		return new BankDAOImpl().getBankInfo(bank);
+		return ServiceFactory.getBankDAO().getBankInfo(bank);
 	}
 
 	@Override

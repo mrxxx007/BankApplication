@@ -4,6 +4,7 @@ import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.model.Bank;
 import com.luxoft.bankapp.model.BankInfo;
 import com.luxoft.bankapp.model.Client;
+import com.luxoft.bankapp.service.ServiceFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,9 +16,21 @@ import java.util.*;
  * Created by Sergey Popov on 06.04.14.
  */
 public class BankDAOImpl implements BankDAO {
+	private static BankDAOImpl instance;
+
+	private BankDAOImpl() {
+
+	}
+
+	public static BankDAOImpl getInstance() {
+		return instance == null ?
+				instance = new BankDAOImpl() :
+				instance;
+	}
+
     @Override
     public Bank getBankByName(String name) throws DAOException {
-        BaseDAOImpl baseDAO = new BaseDAOImpl();
+        BaseDAO baseDAO = new BaseDAOImpl();
 		Bank bank = new Bank(name);
         try (Connection conn = baseDAO.openConnection()) {
 			PreparedStatement stmt = conn.prepareStatement("SELECT * FROM BANKS WHERE NAME = ?");
@@ -40,11 +53,13 @@ public class BankDAOImpl implements BankDAO {
         return bank;
     }
 
+
+
 	@Override
 	public BankInfo getBankInfo(Bank bank) throws DAOException {
 		BankInfo bankInfo = new BankInfo();
 
-		BaseDAOImpl baseDAO = new BaseDAOImpl();
+		BaseDAO baseDAO = new BaseDAOImpl();
 		try (Connection conn = baseDAO.openConnection()) {
 			PreparedStatement stmtClientsNum = conn.prepareStatement("SELECT COUNT(ID) AS TOTAL FROM CLIENTS");
 			PreparedStatement stmtAccSum = conn.prepareStatement("SELECT SUM(BALANCE) AS TOTAL_BAL FROM ACCOUNTS;");
@@ -64,7 +79,7 @@ public class BankDAOImpl implements BankDAO {
 			if (resultSet != null) { resultSet.close(); }
 			if (stmtAccSum != null) { stmtAccSum.close(); }
 
-			List<Client> clients = new ClientDAOImpl().getAllClients(bank);
+			List<Client> clients = ServiceFactory.getClientDAO().getAllClients(bank);
 			Map<String, List<Client>> clientsByCity = new TreeMap<>();
 			for (Client client : clients) {
 				if (!clientsByCity.containsKey(client.getCity())) {
@@ -81,4 +96,6 @@ public class BankDAOImpl implements BankDAO {
 		}
 		return bankInfo;
 	}
+
+
 }

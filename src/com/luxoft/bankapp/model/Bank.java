@@ -11,14 +11,11 @@ import java.util.*;
  * Created by user on 3/25/2014.
  */
 public class Bank implements Report {
-    @NoDB
-	private int id;
+    @NoDB private int id = -1;
     private String name;
-    private List<Client> clientsList = new ArrayList<Client>();
-	@NoDB
-	private Map<String, Client> clients = new HashMap<String, Client>();
-	@NoDB
-	List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();
+	private List<Client> clientsList = new ArrayList<Client>();
+	@NoDB private Map<String, Client> clients = new HashMap<String, Client>();
+	@NoDB List<ClientRegistrationListener> listeners = new ArrayList<ClientRegistrationListener>();
 
     public Bank(String name) {
         this.name = name;

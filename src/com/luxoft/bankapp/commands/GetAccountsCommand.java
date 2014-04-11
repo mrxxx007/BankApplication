@@ -5,6 +5,7 @@ import com.luxoft.bankapp.main.BankCommander;
 import com.luxoft.bankapp.model.Account;
 import com.luxoft.bankapp.model.CheckingAccount;
 import com.luxoft.bankapp.service.AccountServiceImpl;
+import com.luxoft.bankapp.service.ServiceFactory;
 
 /**
  * Created by Sergey Popov on 27.03.2014.
@@ -25,7 +26,7 @@ public class GetAccountsCommand implements Command {
 		for (Account acc : BankCommander.activeClient.getAccounts())
 		{
 			System.out.println("Account #" + ++i);
-			System.out.println("  Type: " + new AccountServiceImpl().getAccountTypeName(acc));
+			System.out.println("  Type: " + ServiceFactory.getAccountService().getAccountTypeName(acc));
 			System.out.println("  Balance: " + acc.getBalance());
 			if(acc.getAccountType().toUpperCase().equals("C")) {
 				System.out.println("  Overdraft: " + ((CheckingAccount) acc).getOverdraft());
