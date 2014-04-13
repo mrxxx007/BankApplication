@@ -32,7 +32,8 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public void withdraw(int clientId, Account account, float amount) throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
+	public void withdraw(int clientId, Account account, float amount)
+            throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
 		account.withdraw(amount);
 		ServiceFactory.getAccountDAO().save(account, clientId);
 	}
@@ -54,4 +55,9 @@ public class AccountServiceImpl implements AccountService {
 		from.withdraw(amount);
 		to.deposit(amount);
 	}
+
+    @Override
+    public float getBalance(Account account) {
+        return account.getBalance();
+    }
 }

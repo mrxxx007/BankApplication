@@ -18,6 +18,7 @@ public interface ClientService {
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException;
 	void setActiveAccount(Client client, Account account);
 	void addAccount(Client client, Account account);
+    float getBalance(Client client, int accountId);
 
 	/**
 	 * Serialize and save Client to file

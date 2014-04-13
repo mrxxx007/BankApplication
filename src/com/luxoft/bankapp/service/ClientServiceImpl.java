@@ -53,11 +53,16 @@ public class ClientServiceImpl implements ClientService {
 		client.addAccount(account);
 	}
 
-	@Override
+    @Override
+    public float getBalance(Client client, int accountId) {
+        return ServiceFactory.getAccountService().getBalance(client.getAccounts().get(accountId));
+    }
+
+    @Override
 	public void saveClient(Client client) {
 		try {
 			ObjectOutputStream output = new ObjectOutputStream(new
-					FileOutputStream("dao/client.obj"));
+					FileOutputStream("data/client.obj"));
 			output.writeObject(client);
 			output.close();
 		} catch (IOException e) {
@@ -71,7 +76,7 @@ public class ClientServiceImpl implements ClientService {
 		Client client = null;
 		try {
 			ObjectInputStream input = new ObjectInputStream(new
-					FileInputStream("dao/client.obj"));
+					FileInputStream("data/client.obj"));
 			client = (Client)input.readObject();
 			input.close();
 		} catch (IOException e) {

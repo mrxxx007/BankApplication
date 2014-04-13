@@ -11,12 +11,13 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
- * Created by user on 4/3/2014.
+ * Created by Sergey Popov on 4/3/2014.
  */
 public class BankTest {
 	//private final Bank bank = new Bank("Test bank");
 	private final Client client1 = new Client(100f);
 	private final Client client2 = new Client(200f);
+    Bank bank = new Bank("Test bank");
 
 	@Before
 	public void setUp() throws Exception {
@@ -40,7 +41,7 @@ public class BankTest {
 
 	@Test
 	public void testGetClientsList() throws Exception {
-		Bank bank = new Bank("Test bank");
+
 		bank.addClient(client1);
 		bank.addClient(client2);
 
@@ -53,7 +54,6 @@ public class BankTest {
 
 	@Test(expected = ClientExistsException.class)
 	public void testAddClient() throws Exception {
-		Bank bank = new Bank("Test bank");
 		bank.addClient(client1);
 		assertTrue(bank.getClientsList().contains(client1));
 
@@ -63,8 +63,6 @@ public class BankTest {
 
 	@Test
 	public void testRemoveClient() throws Exception {
-		Bank bank = new Bank("Test bank");
-
 		bank.addClient(client1);
 		assertTrue(bank.getClientsList().contains(client1));
 
@@ -74,7 +72,6 @@ public class BankTest {
 
 	@Test
 	public void testFindClientByName() throws Exception {
-		Bank bank = new Bank("Test bank");
 		assertNull(bank.findClientByName("Ivanov"));
 		bank.addClient(client1);
 		assertNotNull(bank.findClientByName("Ivanov"));

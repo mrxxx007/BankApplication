@@ -169,7 +169,7 @@ public class ClientDAOImpl implements ClientDAO {
 			if (stmtClient != null) { stmtClient.close(); }
 
 			for (Account acc : client.getAccounts()) {
-				System.out.println("Exec save acc");
+				//System.out.println("Exec save acc");
 				ServiceFactory.getAccountDAO().save(acc, client.getId());
 			}
 

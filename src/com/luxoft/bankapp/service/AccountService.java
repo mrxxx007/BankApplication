@@ -23,4 +23,5 @@ public interface AccountService {
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException;
 	void saveToDB(Account account, int clientId) throws DAOException;
 	void transfer(Account from, Account to, float amount) throws NoEnoughFundsException;
+    float getBalance(Account account);
 }

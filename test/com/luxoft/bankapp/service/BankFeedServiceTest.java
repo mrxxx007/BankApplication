@@ -11,7 +11,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 
 /**
- * Created by user on 4/3/2014.
+ * Created by Sergey Popov on 4/3/2014.
  */
 public class BankFeedServiceTest {
 	@Before
@@ -29,12 +29,12 @@ public class BankFeedServiceTest {
 		Bank bank = new Bank("Test");
 		final String feedStr = "accounttype=c;balance=100;overdraft=50;" +
 				"name=John Smith;gender=m;city=London;phone=1234567890;email=john@mail.com";
-		BufferedWriter bw = new BufferedWriter(new FileWriter("dao/test.feed"));
+		BufferedWriter bw = new BufferedWriter(new FileWriter("data/test.feed"));
 		bw.write(feedStr);
 		bw.close();
 
 		assertTrue(bank.getClientsList().isEmpty());
-		BankFeedService.loadFeed(bank, "dao/test.feed");
+		BankFeedService.loadFeed(bank, "data/test.feed");
 		assertFalse(bank.getClientsList().isEmpty());
 
 		Client client = bank.findClientByName("John Smith");

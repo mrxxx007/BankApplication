@@ -128,11 +128,7 @@ public class Bank implements Report {
 			addClient(client);
 		}
 
-		client.setGender(feed.get("gender").equals("m") ?
-				Gender.MALE : Gender.FEMALE);
-		client.setCity(feed.get("city"));
-		client.setPhone(feed.get("phone"));
-		client.setEmail(feed.get("email"));
+
 
 		client.parseFeed(feed);
 	}

@@ -137,6 +137,17 @@ public class Client implements Report, Serializable {
     }
 
 	public void parseFeed(Map<String, String> feed) {
+        gender = feed.get("gender").equals("m") ?
+                Gender.MALE : Gender.FEMALE;
+        //client.setGender(feed.get("gender").equals("m") ?
+        //        Gender.MALE : Gender.FEMALE);
+        city = feed.get("city");
+        //client.setCity(feed.get("city"));
+        phone = feed.get("phone");
+        //client.setPhone();
+        email = feed.get("email");
+        //client.setEmail(feed.get("email"));
+
 		String accountType = feed.get("accounttype");
 		Account acc = getAccount(accountType);
 
