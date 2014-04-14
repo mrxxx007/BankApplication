@@ -42,7 +42,7 @@ public class ClientDAOImpl implements ClientDAO {
             stmtClient.setInt(2, bank.getId());
             ResultSet resultSet = stmtClient.executeQuery();
 
-            if (!resultSet.first()) {
+            if (!resultSet.next()) {
                 throw new ClientNotFoundException(name);
             }
 
@@ -184,11 +184,12 @@ public class ClientDAOImpl implements ClientDAO {
     public void remove(Client client) throws DAOException {
         BaseDAO baseDAO = new BaseDAOImpl();
 		try (Connection conn = baseDAO.openConnection()) {
+			ServiceFactory.getAccountDAO().removeByClientId(client.getId());
 			PreparedStatement stmtClient = getQuery(QueryType.DELETE, client, conn);
 			if (stmtClient.executeUpdate() == 0) {
 				throw new DAOException("Impossible to delete Client from DB. Transaction is rolled back");
 			}
-			ServiceFactory.getAccountDAO().removeByClientId(client.getId());
+
 			if (stmtClient != null) { stmtClient.close(); }
 		} catch (SQLException e) {
 			e.printStackTrace();

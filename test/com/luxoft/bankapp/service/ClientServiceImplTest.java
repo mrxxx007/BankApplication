@@ -1,9 +1,9 @@
 package com.luxoft.bankapp.service;
 
 import com.luxoft.bankapp.exceptions.ClientExistsException;
+import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.luxoft.bankapp.model.*;
-import org.junit.After;
-import org.junit.Before;
+import org.junit.*;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -12,12 +12,12 @@ import static org.junit.Assert.*;
  * Created by Admin on 12.04.14.
  */
 public class ClientServiceImplTest {
-    Bank bank;
-    Client client1 = new Client("IvanovTestName", 0f);
-    Client testSaveClient = new Client("Test Client", 0f);
+    static Bank bank;
+    static Client client1 = new Client("IvanovTestName", 0f);
 
-    @Before
-    public void setUp() throws Exception {
+
+    @BeforeClass
+    public static void setUp() throws Exception {
         bank = ServiceFactory.getBankDAO().getBankByName("My Bank");
 
         client1.setGender(Gender.MALE);
@@ -28,17 +28,11 @@ public class ClientServiceImplTest {
         ServiceFactory.getClientService().addAccount(client1, new CheckingAccount(1000, 5000));
         ServiceFactory.getClientDAO().save(client1);
 
-        testSaveClient.setGender(Gender.MALE);
-        testSaveClient.setCity("Moscow");
-        testSaveClient.setPhone("+74951234567");
-        testSaveClient.setEmail("test@mail.com");
-        testSaveClient.setBankId(bank.getId());
-        ServiceFactory.getClientService().addAccount(testSaveClient, new CheckingAccount(100f, 100f));
-        ServiceFactory.getClientService().addAccount(testSaveClient, new SavingAccount(9000f));
+
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         ServiceFactory.getBankService().removeClient(bank, client1);
     }
 
@@ -48,6 +42,11 @@ public class ClientServiceImplTest {
         ServiceFactory.getClientService().withdraw(client1, 0, 200f);
         assertEquals(balance - 200f, ServiceFactory.getClientService().getBalance(client1, 0), 0.001);
     }
+
+	@Test (expected = NoEnoughFundsException.class)
+	public void testWithdrawWithNoEnoughFounds() throws Exception {
+		ServiceFactory.getClientService().withdraw(client1, 0, 20000f);
+	}
 
     @Test
     public void testDeposit() throws Exception {
@@ -70,12 +69,14 @@ public class ClientServiceImplTest {
 
     @Test
     public void testSaveLoadClient() throws Exception {
-
-        try {
-            ServiceFactory.getBankService().addClient(bank, client1);
-        } catch (ClientExistsException ex) {
-            System.out.println(ex.getMessage());
-        }
+		Client testSaveClient = new Client("Test Client", 0f);
+		testSaveClient.setGender(Gender.MALE);
+		testSaveClient.setCity("Moscow");
+		testSaveClient.setPhone("+74951234567");
+		testSaveClient.setEmail("test@mail.com");
+		testSaveClient.setBankId(bank.getId());
+		ServiceFactory.getClientService().addAccount(testSaveClient, new CheckingAccount(100f, 100f));
+		ServiceFactory.getClientService().addAccount(testSaveClient, new SavingAccount(9000f));
 
         ServiceFactory.getClientService().saveClient(testSaveClient);
         Client readedClient = ServiceFactory.getClientService().loadClient();

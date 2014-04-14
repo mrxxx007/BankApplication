@@ -2,21 +2,20 @@ package com.luxoft.bankapp.service;
 
 import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.luxoft.bankapp.model.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
+
 import static org.junit.Assert.*;
 
 /**
  * Created by Sergey Popov on 12.04.14.
  */
 public class AccountServiceImplTest {
-    Bank bank;
-    Client client1 = new Client("IvanovTestName", 0f);
-    Client client2 = new Client("PetrovTestName", 0f);
+	static Bank bank;
+    static Client client1 = new Client("IvanovTestName", 0f);
+	static Client client2 = new Client("PetrovTestName", 0f);
 
-    @Before
-    public void setUp() throws Exception {
+    @BeforeClass
+    public static void setUp() throws Exception {
         bank = ServiceFactory.getBankDAO().getBankByName("My Bank");
 
         client1.setGender(Gender.MALE);
@@ -36,9 +35,10 @@ public class AccountServiceImplTest {
         ServiceFactory.getClientDAO().save(client2);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void tearDown() throws Exception {
         ServiceFactory.getBankService().removeClient(bank, client1);
+		ServiceFactory.getBankService().removeClient(bank, client2);
     }
 
     @Test
@@ -54,8 +54,9 @@ public class AccountServiceImplTest {
     }
 
     @Test (expected = NoEnoughFundsException.class)
-    public void testTransfer2() throws Exception {
+    public void testTransferWithNotEnoughMoneyOnAccount() throws Exception {
         float amount = 3000f;
+
         ServiceFactory.getAccountService().transfer(client2.getAccounts().get(0),
                 client1.getAccounts().get(0), amount);
     }

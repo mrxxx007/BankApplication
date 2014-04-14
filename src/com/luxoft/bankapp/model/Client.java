@@ -125,7 +125,7 @@ public class Client implements Report, Serializable {
     }
 
     public String getGender() {
-        return gender.name();
+        return gender == null ? null : gender.name();
     }
 
     public int getBankId() {

@@ -14,52 +14,49 @@ import static org.junit.Assert.*;
  * Created by Sergey Popov on 06.04.14.
  */
 public class ClientDAOImplTest {
-    Client client1 = new Client(100f);
+    //Client client1 = new Client(100f);
 	Bank bank;
 
     @Before
     public void setUp() throws Exception {
 		bank = ServiceFactory.getBankDAO().getBankByName("My Bank");
-
-		client1.setName("IvanovTestName");
-        client1.setGender(Gender.MALE);
-        client1.setCity("Saint-Petersburg");
-        client1.setPhone("+78121234567");
-        client1.setEmail("ivanov@mail.com");
-		client1.setBankId(bank.getId());
     }
 
-    @Test (expected = ClientNotFoundException.class)
+    @Test
     public void testFindClientByName() throws Exception {
         ClientDAO clientDAO = ServiceFactory.getClientDAO();
         Bank bank = ServiceFactory.getBankDAO().getBankByName("My Bank");
 		assertNotNull(bank);
 
-        clientDAO.save(client1);
-        Client fromDB = clientDAO.findClientByName(bank, "IvanovTestName");
+		Client saveClient = new Client("IvanovTestFind", 0f);
+		saveClient.setGender(Gender.MALE);
+		saveClient.setCity("Saint-Petersburg");
+		saveClient.setPhone("+78121234567");
+		saveClient.setEmail("ivanov@mail.com");
+		saveClient.setBankId(bank.getId());
+
+        clientDAO.save(saveClient);
+        Client fromDB = clientDAO.findClientByName(bank, "IvanovTestFind");
         assertNotNull(fromDB);
-        assertEquals(client1.getCity(), fromDB.getCity());
+        assertEquals(saveClient, fromDB);
 
-		clientDAO.remove(client1);
-		// should be exception
-		fromDB = clientDAO.findClientByName(bank, "IvanovTestName");
-		assertNull(fromDB);
-
-
+		clientDAO.remove(saveClient);
     }
 
-    @Test
-    public void testFindClientById() throws Exception {
+	@Test (expected = ClientNotFoundException.class)
+	public void testFindClientByName_clientNotExistsInDB() throws Exception {
+		ServiceFactory.getClientDAO().findClientByName(bank, "IvanovNotExists");
+	}
 
-    }
-
-    @Test
-    public void testGetAllClients() throws Exception {
-
-    }
 
     @Test
     public void testSave() throws Exception {
+		Client client1 = new Client("IvanovTestSave", 0f);
+		client1.setGender(Gender.MALE);
+		client1.setCity("Saint-Petersburg");
+		client1.setPhone("+78121234567");
+		client1.setEmail("ivanov@mail.com");
+		client1.setBankId(bank.getId());
 		// Testing insert
 		ClientDAO clientDAO = ServiceFactory.getClientDAO();
 		clientDAO.save(client1);
@@ -75,13 +72,18 @@ public class ClientDAOImplTest {
 		clientDAO.save(client1);
 
 		client2 = clientDAO.findClientById(clientId);
-		assertTrue(TestService.isEquals(client1, client2));
+		assertEquals(client1, client2);
 
 		clientDAO.remove(client1);
 	}
 
     @Test
     public void testRemove() throws Exception {
+		Client removeClient = new Client("TestRemoveClient", 0f);
 
+		removeClient.setBankId(bank.getId());
+		ServiceFactory.getClientDAO().save(removeClient);
+
+		ServiceFactory.getClientDAO().remove(removeClient);
     }
 }
