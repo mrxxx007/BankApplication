@@ -35,12 +35,12 @@ public class ServerThread implements Runnable{
 
 	@Override
 	public void run() {
-		if (activeBank == null) {
-			System.out.println("Active bank not found");
-			System.exit(0);
-		}
+        BankServerThreaded.connectQueueCount.getAndDecrement();
 
 		try {
+            if (activeBank == null) {
+                throw new BankNotFoundException("null");
+            }
 			// 1. creating a server socket
 			//providerSocket = new ServerSocket(2014, 10);
 			// 2. Wait for connection
@@ -139,7 +139,9 @@ public class ServerThread implements Runnable{
 			} while (!message.equals("exit"));
 		} catch (IOException ioException) {
 			ioException.printStackTrace();
-		} finally {
+		} catch (BankNotFoundException e) {
+            e.printStackTrace();
+        } finally {
 			// 4: Closing connection
 			try {
 				in.close();

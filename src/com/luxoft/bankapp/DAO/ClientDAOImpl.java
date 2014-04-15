@@ -204,8 +204,13 @@ public class ClientDAOImpl implements ClientDAO {
 
     private Client extractClientFromResultSet(ResultSet resultSet) throws SQLException {
         Client client = new Client(resultSet.getInt("ID"), resultSet.getString("NAME"), 0f);
-        Gender gender = Gender.valueOf(resultSet.getString("GENDER").toUpperCase());
-		client.setGender(gender);
+        Gender gender;
+        try {
+            gender = Gender.valueOf(resultSet.getString("GENDER").toUpperCase());
+            client.setGender(gender);
+        } catch (NullPointerException e) {
+            client.setGender(null);
+        }
         client.setEmail(resultSet.getString("EMAIL"));
         client.setPhone(resultSet.getString("PHONE"));
         client.setCity(resultSet.getString("CITY"));

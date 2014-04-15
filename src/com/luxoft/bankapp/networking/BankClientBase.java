@@ -19,8 +19,9 @@ public class BankClientBase {
 	String message;
 	String value;
 	int cmdNumber;
-	static final String SERVER = "localhost";
-	List<String> commands;
+	protected static final String SERVER = "localhost";
+    protected static final int PORT = 2014;
+	protected List<String> commands;
 
 	void run() {
 		InputStreamReader streamReader = new InputStreamReader(System.in);
@@ -28,8 +29,8 @@ public class BankClientBase {
 
 		try {
 			// 1. creating a socket to connect to the server
-			requestSocket = new Socket(SERVER, 2014);
-			System.out.println("Connected to localhost in port 2014");
+			requestSocket = new Socket(SERVER, PORT);
+			System.out.println("Connected to localhost in port " + PORT);
 			// 2. get Input and Output streams
 			out = new ObjectOutputStream(requestSocket.getOutputStream());
 			out.flush();
@@ -83,7 +84,7 @@ public class BankClientBase {
 		}
 	}
 
-	void sendMessage(final String msg) {
+    protected void sendMessage(final String msg) {
 		try {
 			out.writeObject(msg);
 			out.flush();
@@ -93,7 +94,7 @@ public class BankClientBase {
 		}
 	}
 
-	private void generateAnsSendCmd(int cmdNumber, BufferedReader inputStream)
+	protected void generateAnsSendCmd(int cmdNumber, BufferedReader inputStream)
 			throws IOException, ClassNotFoundException, DataVerifyException {
 		String value;
 		String cmdName = commands.get(cmdNumber);

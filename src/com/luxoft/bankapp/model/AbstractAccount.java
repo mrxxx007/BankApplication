@@ -18,7 +18,7 @@ public abstract class AbstractAccount implements Account, Serializable {
     }
 
     @Override
-    public void deposit(float x) {
+    synchronized public void deposit(float x) {
         if (x < 0)
             throw new IllegalArgumentException();
         balance += x;

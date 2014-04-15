@@ -35,7 +35,7 @@ public class SavingAccount extends AbstractAccount {
 	}
 
     @Override
-    public void withdraw(float x) throws NoEnoughFundsException {
+    synchronized public void withdraw(float x) throws NoEnoughFundsException {
         if (x < 0) {
 			throw new IllegalArgumentException();
 		}
