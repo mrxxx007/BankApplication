@@ -7,14 +7,18 @@ import com.luxoft.bankapp.exceptions.NoEnoughFundsException;
 import com.luxoft.bankapp.model.Account;
 import com.luxoft.bankapp.model.CheckingAccount;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 /**
  * Created by Sergey Popov on 4/8/2014.
  */
 public class AccountServiceImpl implements AccountService {
 	private static AccountServiceImpl instance;
+    private static Object monitor;
 
 	private AccountServiceImpl() {
-
+        monitor = new Object();
 	}
 
 	public static AccountServiceImpl getInstance() {
@@ -32,10 +36,10 @@ public class AccountServiceImpl implements AccountService {
 	}
 
 	@Override
-	public void withdraw(int clientId, Account account, float amount)
+	synchronized public void withdraw(int clientId, Account account, float amount)
             throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
-		account.withdraw(amount);
-		ServiceFactory.getAccountDAO().save(account, clientId);
+        account.withdraw(amount);
+        ServiceFactory.getAccountDAO().save(account, clientId);
 	}
 
 	@Override
@@ -50,7 +54,12 @@ public class AccountServiceImpl implements AccountService {
 		ServiceFactory.getAccountDAO().save(account, clientId);
 	}
 
-	@Override
+    @Override
+    public Account getAccount(int clientId, int accountId) {
+        return ServiceFactory.getAccountDAO().getClientAccounts(clientId).get(accountId);
+    }
+
+    @Override
 	public void transfer(Account from, Account to, float amount) throws NoEnoughFundsException {
 		from.withdraw(amount);
 		to.deposit(amount);

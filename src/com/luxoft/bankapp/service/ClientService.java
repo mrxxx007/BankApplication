@@ -12,7 +12,7 @@ import com.luxoft.bankapp.model.Client;
  */
 public interface ClientService {
 	void saveClientToDB(Client client) throws DAOException;
-	void withdraw(Client client, int accountIndex, float amount)
+    void withdraw(Client client, int accountIndex, float amount)
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException;
 	void deposit(Client client, int accountIndex, float amount)
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException;

@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -31,35 +33,49 @@ public class BankServerThreadedTest {
             Bank bank = ServiceFactory.getBankDAO().getBankByName("My Bank");
             client.setBankId(bank.getId());
 
-            Account acc = new SavingAccount(5000f);
+            Account acc = new SavingAccount(4000f);
             ServiceFactory.getClientService().addAccount(client, acc);
             ServiceFactory.getClientDAO().save(client);
 			client = ServiceFactory.getClientDAO().findClientByName(bank, client.getName());
 			float balance = ServiceFactory.getClientService().getBalance(client, 0);
 
             BankServerThreaded bankServerThreaded = new BankServerThreaded();
-			bankServerThreaded.setShouldStop(true);
+
             //bankServerThreaded.runServer();
             Thread srvThread = new Thread(bankServerThreaded);
             srvThread.start();
 
-            BankClientMock bankClientMock = new BankClientMock(client);
-			Thread clientThread = new Thread(bankClientMock);
-			clientThread.start();
+//            BankClientMock bankClientMock = new BankClientMock(client);
+//			Thread clientThread = new Thread(bankClientMock);
+//			clientThread.start();
 
-			System.out.println("join client");
-			clientThread.join();
+            int threadsNum = 10;
+            List<Thread> threads = new ArrayList<>(threadsNum);
+            for (int i = 0; i < threadsNum; i++) {
+                threads.add(new Thread(new BankClientMock(client)));
+            }
+            for (int i = 0; i < threadsNum; i++) {
+                threads.get(i).start();
+            }
+            for (int i = 0; i < threadsNum; i++) {
+                threads.get(i).join();
+            }
+
+            bankServerThreaded.stopServer();
+			//System.out.println("join client");
+			//clientThread.join();
 
 			System.out.println("join srv");
 			srvThread.join();
 
 			System.out.println("after join");
 
-
+            client = ServiceFactory.getClientDAO().findClientByName(bank, client.getName());
 			float newBalance = ServiceFactory.getClientService().getBalance(client, 0);
 			ServiceFactory.getClientDAO().remove(client);
 
-            assertEquals(balance-500, newBalance, 0f);
+            System.out.println("Balance: " + newBalance);
+            assertEquals(balance-threadsNum, newBalance, 0f);
 
 			//srvThread.interrupt();
 			//bankServerThreaded.serverSocket.accept().close();

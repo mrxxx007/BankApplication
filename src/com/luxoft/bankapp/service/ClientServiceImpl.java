@@ -35,6 +35,8 @@ public class ClientServiceImpl implements ClientService {
 	public void withdraw(Client client, int accountIndex, float amount)
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
 		ServiceFactory.getAccountService().withdraw(client.getId(), client.getAccounts().get(accountIndex), amount);
+//        ServiceFactory.getAccountService().withdraw(client.getId(),
+//                ServiceFactory.getAccountService().getAccount(client.getId(), accountIndex), amount);
 	}
 
 	@Override

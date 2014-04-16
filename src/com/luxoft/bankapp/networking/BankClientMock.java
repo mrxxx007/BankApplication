@@ -32,7 +32,7 @@ public class BankClientMock extends BankClientBase implements Runnable {
 	public void run() {
 		InputStreamReader streamReader = new InputStreamReader(System.in);
 		BufferedReader bufferedReader = new BufferedReader(streamReader);
-		String[] cmdPerform = {"authorize " + client.getName(), "withdraw 500.00", "exit"};
+		String[] cmdPerform = {"authorize " + client.getName(), "withdraw 1.00", "exit"};
 		int k = 0;
 
 		try {
@@ -48,20 +48,14 @@ public class BankClientMock extends BankClientBase implements Runnable {
 				try {
 					message = (String) in.readObject();
 
-					System.out.println("server > " + message);
+					//System.out.println("server > " + message);
 
-					// print commands menu
-					//printMenu();
-					System.out.print(" -> ");
+					//System.out.print(" -> ");
 
-					// read cmd number and put cmd name to message string and send message
-					//cmdNumber = Integer.parseInt(bufferedReader.readLine());
-					//generateAnsSendCmd(cmdNumber, bufferedReader);
-					//sendMessage(cmdPerform[k++]);
 					message = cmdPerform[k++];
 					out.writeObject(message);
 					out.flush();
-					System.out.println("");
+					//System.out.println("");
 				} catch (ClassNotFoundException classNot) {
 					System.err.println("dao received in unknown format");
 				}

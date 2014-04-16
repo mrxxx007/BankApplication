@@ -37,12 +37,12 @@ public class BankServerThreaded implements Runnable{
 
     public void stopServer() {
         shouldStop = true;
-		/*try {
+		try {
 			serverSocket.close();
 			System.out.println("call close");
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 
 	}
 
@@ -63,28 +63,31 @@ public class BankServerThreaded implements Runnable{
             Bank bank = ServiceFactory.getBankService().getBank("My Bank");
 
             serverSocket = new ServerSocket(PORT);
-			//serverSocket.setSoTimeout(1000);
+			serverSocket.setSoTimeout(1000);
 
             while (true) {
 				clientSocket = serverSocket.accept();
 
                 connectQueueCount.incrementAndGet();
-                Future future = pool.submit(new ServerThread(clientSocket, bank));
+                pool.execute(new ServerThread(clientSocket, bank));
 
 				if (shouldStop) {
-					while (!future.isDone()) {
+					/*while (!future.isDone()) {
 						System.out.println(future.isDone());
 						try {
-							Thread.sleep(5000);
+							Thread.sleep(100);
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-					}
+					}*/
 					break;
 				}
             }
-            //System.out.println("stopping server");
-        } catch (IOException e) {
+            System.out.println("stopping server");
+        } catch (SocketTimeoutException e) {
+            System.out.println("Server socket has been closed");
+        }
+        catch (IOException e) {
             e.printStackTrace();
         } catch (DAOException e) {
             e.printStackTrace();

@@ -67,7 +67,7 @@ public class ServerThread implements Runnable{
 						commandParam = message.substring(spaceIndex + 1);
 					}
 
-					System.out.println("client > " + message);
+					//System.out.println("client > " + message);
 					switch (command) {
 						case "exit":
 							sendMessage("Connection has been closed");
@@ -89,7 +89,7 @@ public class ServerThread implements Runnable{
 							break;
 						case "withdraw":
 							try {
-								System.out.println("withdraw " + Float.parseFloat(commandParam));
+								//System.out.println("withdraw " + Float.parseFloat(commandParam));
 								ServiceFactory.getClientService().withdraw(activeClient, 0, Float.parseFloat(commandParam));
 
 								sendMessage("Operation complete successfully");
@@ -160,7 +160,7 @@ public class ServerThread implements Runnable{
 		try {
 			out.writeObject(msg);
 			out.flush();
-			System.out.println("server > " + msg);
+			//System.out.println("server > " + msg);
 		} catch (IOException ioException) {
 			ioException.printStackTrace();
 		}
