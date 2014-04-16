@@ -64,7 +64,8 @@ public class Client implements Report, Serializable {
 	}
 
 	public List<Account> getAccounts() {
-		return Collections.unmodifiableList(accounts);
+		//return Collections.unmodifiableList(accounts);
+		return accounts;
 	}
 
 	public void addAccount(Account account) {

@@ -89,7 +89,9 @@ public class ServerThread implements Runnable{
 							break;
 						case "withdraw":
 							try {
+								System.out.println("withdraw " + Float.parseFloat(commandParam));
 								ServiceFactory.getClientService().withdraw(activeClient, 0, Float.parseFloat(commandParam));
+
 								sendMessage("Operation complete successfully");
 							} catch (DataVerifyException e) {
 								sendMessage(e.getMessage());

@@ -12,72 +12,73 @@ import java.util.List;
 /**
  * Created by Sergey Popov on 15.04.14.
  */
-public class BankClientMock extends BankClientBase {
-    //Socket requestSocket;
-    //ObjectOutputStream out;
-    //ObjectInputStream in;
-    String message;
-    //String value;
-    //int cmdNumber;
-    private Client client;
-    //static final String SERVER = "localhost";
-    //List<String> commands;
+public class BankClientMock extends BankClientBase implements Runnable {
+	Socket requestSocket;
+	private ObjectOutputStream out;
+	private ObjectInputStream in;
+	String message;
+	String value;
+	int cmdNumber;
+	protected static final String SERVER = "localhost";
+	protected static final int PORT = 2016;
+	protected List<String> commands;
+	private Client client;
 
     public BankClientMock(Client client) {
         this.client = client;
     }
 
-    public void runWithdrawCommand(float amount) {
-        //InputStreamReader streamReader = new InputStreamReader(System.in);
-        //BufferedReader bufferedReader = new BufferedReader(streamReader);
+	@Override
+	public void run() {
+		InputStreamReader streamReader = new InputStreamReader(System.in);
+		BufferedReader bufferedReader = new BufferedReader(streamReader);
+		String[] cmdPerform = {"authorize " + client.getName(), "withdraw 500.00", "exit"};
+		int k = 0;
 
-        //BankClientMock clientMock = new BankClientMock();
-        if (client == null) {
-            System.out.println("Client null");
-            return;
-        }
-        commands = ClientServerCommands.getBankClientCommands();
-        try {
-            requestSocket = new Socket(SERVER, PORT);
-            //System.out.println("Connected to localhost in port 2014");
-            // 2. get Input and Output streams
-            out = new ObjectOutputStream(requestSocket.getOutputStream());
-            out.flush();
-            in = new ObjectInputStream(requestSocket.getInputStream());
-            // 3: Communicating with the server
-            //do {
-            try {
-                message = (String) in.readObject();
+		try {
+			// 1. creating a socket to connect to the server
+			requestSocket = new Socket(SERVER, PORT);
+			System.out.println("Connected to localhost in port " + PORT);
+			// 2. get Input and Output streams
+			out = new ObjectOutputStream(requestSocket.getOutputStream());
+			out.flush();
+			in = new ObjectInputStream(requestSocket.getInputStream());
+			// 3: Communicating with the server
+			do {
+				try {
+					message = (String) in.readObject();
 
-                sendMessage("authorize " + client.getName());
-                message = (String) in.readObject();
-                if (!message.equals("Authorization OK")) {
-                    throw new ClientNotFoundException(client.getName());
-                }
+					System.out.println("server > " + message);
 
-                sendMessage("withdraw " + amount);
-                message = (String) in.readObject();
-                sendMessage("exit");
+					// print commands menu
+					//printMenu();
+					System.out.print(" -> ");
 
-            } catch (ClassNotFoundException classNot) {
-                System.err.println("dao received in unknown format");
-            } catch (ClientNotFoundException e) {
-                e.printStackTrace();
-            }
-            //} while (!message.equals("exit"));
-        } catch (UnknownHostException unknownHost) {
-            System.err.println("You are trying to connect to an unknown host!");
-        } catch (IOException ioException) {
-            ioException.printStackTrace();
-        } finally {
-            // 4: Closing connection
-            try {
-                in.close();
-                out.close();
-                requestSocket.close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
-            }
-        }
-    }
+					// read cmd number and put cmd name to message string and send message
+					//cmdNumber = Integer.parseInt(bufferedReader.readLine());
+					//generateAnsSendCmd(cmdNumber, bufferedReader);
+					//sendMessage(cmdPerform[k++]);
+					message = cmdPerform[k++];
+					out.writeObject(message);
+					out.flush();
+					System.out.println("");
+				} catch (ClassNotFoundException classNot) {
+					System.err.println("dao received in unknown format");
+				}
+			} while (!message.equals("exit"));
+		} catch (UnknownHostException unknownHost) {
+			System.err.println("You are trying to connect to an unknown host!");
+		} catch (IOException ioException) {
+			ioException.printStackTrace();
+		} finally {
+			// 4: Closing connection
+			try {
+				in.close();
+				out.close();
+				requestSocket.close();
+			} catch (IOException ioException) {
+				ioException.printStackTrace();
+			}
+		}
+	}
 }

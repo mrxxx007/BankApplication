@@ -14,13 +14,13 @@ import java.util.List;
  */
 public class BankClientBase {
 	Socket requestSocket;
-	ObjectOutputStream out;
-	ObjectInputStream in;
+	protected ObjectOutputStream out;
+	protected ObjectInputStream in;
 	String message;
 	String value;
 	int cmdNumber;
 	protected static final String SERVER = "localhost";
-    protected static final int PORT = 2014;
+    protected static final int PORT = 2016;
 	protected List<String> commands;
 
 	void run() {

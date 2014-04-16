@@ -34,7 +34,8 @@ public class AccountDAOImpl implements AccountDAO {
 		try (Connection conn = baseDAO.openConnection()) {
 			int accId = (account.getId());
 
-			if (accId == -1) {
+			System.out.println("accId = " + account.getId());
+			if (accId <= 0) {
 				stmt = conn.prepareStatement("INSERT INTO ACCOUNTS(CLIENT_ID, ACCTYPE, BALANCE, OVERDRAFT) " +
 						"VALUES(?, ?, ?, ?)");
 				stmt.setInt(1, clientId);
@@ -55,6 +56,7 @@ public class AccountDAOImpl implements AccountDAO {
 				}
 				account.setId(resultSet.getInt(1));
 				resultSet.close();
+				System.out.println("accId after save = " + account.getId());
 				//account.setClientId(clientId);
 			} else {
 				stmt = conn.prepareStatement("UPDATE ACCOUNTS SET " +
@@ -69,8 +71,9 @@ public class AccountDAOImpl implements AccountDAO {
 					stmt.setObject(4, null);
 				}
 				stmt.setInt(5, accId);
+				stmt.executeUpdate();
 			}
-			stmt.executeUpdate();
+
 			if (stmt != null) {	stmt.close(); }
 		} catch (SQLException e) {
 			e.printStackTrace();
