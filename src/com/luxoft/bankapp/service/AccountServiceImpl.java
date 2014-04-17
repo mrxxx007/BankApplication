@@ -38,12 +38,12 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	synchronized public void withdraw(int clientId, Account account, float amount)
             throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
-        account.withdraw(amount);
-        ServiceFactory.getAccountDAO().save(account, clientId);
+		account.withdraw(amount);
+		ServiceFactory.getAccountDAO().save(account, clientId);
 	}
 
 	@Override
-	public void deposit(int clientId, Account account, float amount)
+	synchronized public void deposit(int clientId, Account account, float amount)
 			throws DataVerifyException, AccountNotFoundException, NoEnoughFundsException, DAOException {
 		account.deposit(amount);
 		ServiceFactory.getAccountDAO().save(account, clientId);

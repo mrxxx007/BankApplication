@@ -46,8 +46,10 @@ public class ServerThread implements Runnable{
 			// 2. Wait for connection
 			//System.out.println("Waiting for connection");
 			//connection = providerSocket.accept();
-			System.out.println("Connection received from "
-					+ connection.getInetAddress().getHostName());
+
+//			System.out.println("Connection received from "
+//					+ connection.getInetAddress().getHostName());
+
 			// 3. get Input and Output streams
 			out = new ObjectOutputStream(connection.getOutputStream());
 			out.flush();
@@ -89,7 +91,6 @@ public class ServerThread implements Runnable{
 							break;
 						case "withdraw":
 							try {
-								//System.out.println("withdraw " + Float.parseFloat(commandParam));
 								ServiceFactory.getClientService().withdraw(activeClient, 0, Float.parseFloat(commandParam));
 
 								sendMessage("Operation complete successfully");

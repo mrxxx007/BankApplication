@@ -85,6 +85,7 @@ public class Bank implements Report {
 			throw new ClientExistsException();
 		clientsList.add(client);
 
+
 		for (ClientRegistrationListener listener : listeners)
             listener.onClientAdded(client);
 		//clients.put(client.getName(), client);

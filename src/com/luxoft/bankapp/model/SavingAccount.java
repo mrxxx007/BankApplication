@@ -36,13 +36,16 @@ public class SavingAccount extends AbstractAccount {
 
     @Override
     synchronized public void withdraw(float x) throws NoEnoughFundsException {
-        if (x < 0) {
+		//System.out.println("begin " + Thread.currentThread().getName());
+		if (x < 0) {
 			throw new IllegalArgumentException();
 		}
         if (balance < x) {
 			throw new NoEnoughFundsException();
 		}
+
         balance -= x;
+		//System.out.println("end " + Thread.currentThread().getName());
     }
 
 	@Override

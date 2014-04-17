@@ -32,7 +32,7 @@ public class ClientDAOImpl implements ClientDAO {
 	}
 
     @Override
-    public Client findClientByName(Bank bank, String name) throws ClientNotFoundException {
+    synchronized public Client findClientByName(Bank bank, String name) throws ClientNotFoundException {
         BaseDAO baseDAO = new BaseDAOImpl();
         Client client = null;
         try (Connection conn = baseDAO.openConnection()) {

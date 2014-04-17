@@ -7,6 +7,7 @@ import com.luxoft.bankapp.service.ServiceFactory;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -17,8 +18,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * Created by Sergey Popov on 4/15/2014.
  */
 public class BankServerThreaded implements Runnable{
-	final int PORT = 2016;
-	final int POOL_SIZE = 10;
+	final int PORT = 2014;
+	final int POOL_SIZE = 50;
 
 
 
@@ -39,7 +40,6 @@ public class BankServerThreaded implements Runnable{
         shouldStop = true;
 		try {
 			serverSocket.close();
-			System.out.println("call close");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -63,7 +63,7 @@ public class BankServerThreaded implements Runnable{
             Bank bank = ServiceFactory.getBankService().getBank("My Bank");
 
             serverSocket = new ServerSocket(PORT);
-			serverSocket.setSoTimeout(1000);
+			//serverSocket.setSoTimeout(5000);
 
             while (true) {
 				clientSocket = serverSocket.accept();
@@ -72,21 +72,15 @@ public class BankServerThreaded implements Runnable{
                 pool.execute(new ServerThread(clientSocket, bank));
 
 				if (shouldStop) {
-					/*while (!future.isDone()) {
-						System.out.println(future.isDone());
-						try {
-							Thread.sleep(100);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}*/
 					break;
 				}
             }
             System.out.println("stopping server");
         } catch (SocketTimeoutException e) {
-            System.out.println("Server socket has been closed");
-        }
+            System.out.println("Server socket has been closed by timeout");
+        } catch (SocketException e) {
+			System.out.println("Server socket has been closed");
+		}
         catch (IOException e) {
             e.printStackTrace();
         } catch (DAOException e) {

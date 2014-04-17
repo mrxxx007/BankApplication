@@ -1,26 +1,23 @@
 package com.luxoft.bankapp.networking;
 
-import com.luxoft.bankapp.exceptions.ClientNotFoundException;
-import com.luxoft.bankapp.exceptions.DataVerifyException;
 import com.luxoft.bankapp.model.Client;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * Created by Sergey Popov on 15.04.14.
  */
-public class BankClientMock extends BankClientBase implements Runnable {
+public class BankClientMock extends BankClientBase implements Callable {
 	Socket requestSocket;
 	private ObjectOutputStream out;
 	private ObjectInputStream in;
 	String message;
-	String value;
-	int cmdNumber;
 	protected static final String SERVER = "localhost";
-	protected static final int PORT = 2016;
+	protected static final int PORT = 2014;
 	protected List<String> commands;
 	private Client client;
 
@@ -29,43 +26,41 @@ public class BankClientMock extends BankClientBase implements Runnable {
     }
 
 	@Override
-	public void run() {
-		InputStreamReader streamReader = new InputStreamReader(System.in);
-		BufferedReader bufferedReader = new BufferedReader(streamReader);
-		String[] cmdPerform = {"authorize " + client.getName(), "withdraw 1.00", "exit"};
+	public Object call() {
+		String[] cmdPerform = {
+				"authorize " + client.getName(),
+				"withdraw 1.00",
+				"exit"
+		};
 		int k = 0;
-
+		long startTime = 0;
+		long stopTime = 0;
 		try {
-			// 1. creating a socket to connect to the server
+			startTime = System.currentTimeMillis();
+
 			requestSocket = new Socket(SERVER, PORT);
-			System.out.println("Connected to localhost in port " + PORT);
-			// 2. get Input and Output streams
+			//System.out.println("Connected to localhost in port " + PORT);
 			out = new ObjectOutputStream(requestSocket.getOutputStream());
 			out.flush();
 			in = new ObjectInputStream(requestSocket.getInputStream());
-			// 3: Communicating with the server
 			do {
 				try {
 					message = (String) in.readObject();
 
 					//System.out.println("server > " + message);
-
-					//System.out.print(" -> ");
-
 					message = cmdPerform[k++];
 					out.writeObject(message);
 					out.flush();
-					//System.out.println("");
 				} catch (ClassNotFoundException classNot) {
 					System.err.println("dao received in unknown format");
 				}
 			} while (!message.equals("exit"));
+			stopTime = System.currentTimeMillis();
 		} catch (UnknownHostException unknownHost) {
 			System.err.println("You are trying to connect to an unknown host!");
 		} catch (IOException ioException) {
 			ioException.printStackTrace();
 		} finally {
-			// 4: Closing connection
 			try {
 				in.close();
 				out.close();
@@ -74,5 +69,6 @@ public class BankClientMock extends BankClientBase implements Runnable {
 				ioException.printStackTrace();
 			}
 		}
+		return stopTime - startTime;
 	}
 }
