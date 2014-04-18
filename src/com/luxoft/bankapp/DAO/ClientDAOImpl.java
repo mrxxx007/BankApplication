@@ -191,7 +191,6 @@ public class ClientDAOImpl implements ClientDAO {
 
     @Override
     public void remove(Client client) throws DAOException {
-		//System.out.println("remove client");
 		BaseDAO baseDAO = new BaseDAOImpl();
 		try (Connection conn = baseDAO.openConnection()) {
 			ServiceFactory.getAccountDAO().removeByClientId(client.getId());
