@@ -14,40 +14,31 @@ import java.io.InputStreamReader;
  */
 public class TransferCommand implements Command {
 	@Override
-	public void execute() {
+	public void execute() throws IOException, BankException{
 		InputStreamReader streamReader = new InputStreamReader(System.in);
 		BufferedReader bufferedReader = new BufferedReader(streamReader);
 
-		try {
-			if (BankCommander.activeClient == null) {
-				throw new NotFoundException("Active client not found. Please, find the client you need first");
-			}
-
-			System.out.print("Enter amount you want to transfer:\n -> ");
-
-			float amount = Float.parseFloat(bufferedReader.readLine());
-
-			System.out.print("Enter receiver client name:\n -> ");
-			String clientName = bufferedReader.readLine();
-
-			//ClientService clientService = new ClientServiceImpl();
-			Client receiver = ServiceFactory.getBankService().findClientByName(BankCommander.activeBank, clientName);
-			if (receiver == null) {
-				throw new NotFoundException("The receiver " + clientName + " not found");
-			}
-
-			ServiceFactory.getAccountService().transfer(BankCommander.activeClient.getAccounts().get(0),
-					receiver.getAccounts().get(0), amount);
-
-			System.out.printf("Transfer from %s to %s complete",
-					BankCommander.activeClient.getName(), receiver.getName());
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (NoEnoughFundsException e) {
-			System.out.println(e.getMessage());
-		} catch (NotFoundException e) {
-			System.out.println(e.getMessage());
+		if (BankCommander.activeClient == null) {
+			throw new NotFoundException("Active client not found. Please, find the client you need first");
 		}
+
+		System.out.print("Enter amount you want to transfer:\n -> ");
+
+		float amount = Float.parseFloat(bufferedReader.readLine());
+
+		System.out.print("Enter receiver client name:\n -> ");
+		String clientName = bufferedReader.readLine();
+
+		Client receiver = ServiceFactory.getBankService().findClientByName(BankCommander.activeBank, clientName);
+		if (receiver == null) {
+			throw new ClientNotFoundException("The receiver " + clientName + " not found");
+		}
+
+		ServiceFactory.getAccountService().transfer(BankCommander.activeClient.getAccounts().get(0),
+				receiver.getAccounts().get(0), amount);
+
+		System.out.printf("Transfer from %s to %s complete",
+				BankCommander.activeClient.getName(), receiver.getName());
 	}
 
 	@Override

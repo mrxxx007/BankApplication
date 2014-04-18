@@ -10,16 +10,18 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Created by Sergey Popov on 4/15/2014.
  */
 public class ServerThread implements Runnable{
-	//Socket clientSocket;
+	static Logger logger = Logger.getLogger(ServerThread.class.getName());
 	private Bank activeBank;
 	private Client activeClient;
 
-	ServerSocket providerSocket;
+	//ServerSocket providerSocket;
 	Socket connection = null;
 	ObjectOutputStream out;
 	ObjectInputStream in;
@@ -33,9 +35,21 @@ public class ServerThread implements Runnable{
 		activeBank = bank;
 	}
 
+	/*static {
+		logger.setUseParentHandlers(false);
+		try {
+			logger.addHandler(new FileHandler("logs/bankapp_server%u.log", true));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}*/
+
 	@Override
 	public void run() {
         BankServerThreaded.connectQueueCount.getAndDecrement();
+		String connName = connection.getInetAddress().getHostName();
+		logger.info("Connection received [" + connName + "]");
+		long startTime = System.currentTimeMillis();
 
 		try {
             if (activeBank == null) {
@@ -47,8 +61,8 @@ public class ServerThread implements Runnable{
 			//System.out.println("Waiting for connection");
 			//connection = providerSocket.accept();
 
-//			System.out.println("Connection received from "
-//					+ connection.getInetAddress().getHostName());
+			System.out.println("Connection received from "
+					+ connection.getInetAddress().getHostName());
 
 			// 3. get Input and Output streams
 			out = new ObjectOutputStream(connection.getOutputStream());
@@ -104,7 +118,6 @@ public class ServerThread implements Runnable{
 							break;
 						case "addClient":
 							Client client = (Client)in.readObject();
-							//activeBank.addClient(client);
 							ServiceFactory.getBankService().addClient(activeBank, client);
 							sendMessage("The client was successfully added");
 							break;
@@ -116,8 +129,6 @@ public class ServerThread implements Runnable{
 							}
 							break;
 						case "deleteClient":
-							//Client findingClient = activeBank.findClientByName(commandParam);
-							//BankService bankService = new BankServiceImpl();
 							Client findingClient = ServiceFactory.getBankService().findClientByName(activeBank, commandParam);
 							if (findingClient == null) {
 								throw new ClientNotFoundException(commandParam);
@@ -128,22 +139,29 @@ public class ServerThread implements Runnable{
 							break;
 						default:
 							sendMessage("Unknown command");
+							logger.info("Client puts an unknown command <" + command + ">");
 					}
 
 				} catch (ClassNotFoundException classnot) {
 					System.err.println("Data received in unknown format");
+					logger.log(Level.SEVERE, "Data received in unknown format", classnot);
 				} catch (ClientExistsException e) {
 					sendMessage(e.getMessage());
+					logger.info(e.getMessage());
 				} catch (ClientNotFoundException e) {
 					sendMessage(e.getMessage());
+					logger.info(e.getMessage());
 				} catch (DAOException e) {
 					sendMessage(e.getMessage());
+					logger.info(e.getMessage());
 				}
 			} while (!message.equals("exit"));
 		} catch (IOException ioException) {
 			ioException.printStackTrace();
+			logger.log(Level.SEVERE, "IOException", ioException);
 		} catch (BankNotFoundException e) {
             e.printStackTrace();
+			logger.warning(e.getMessage());
         } finally {
 			// 4: Closing connection
 			try {
@@ -153,8 +171,15 @@ public class ServerThread implements Runnable{
 				connection.close();
 			} catch (IOException ioException) {
 				ioException.printStackTrace();
+				logger.log(Level.SEVERE, "IOException while closing connections", ioException);
 			}
+
+			long finishTime = System.currentTimeMillis();
+			logger.info(String.format("Connection closed [%s].  Work time: %d ms",
+					connName, finishTime - startTime));
 		}
+
+
 	}
 
 	void sendMessage(final String msg) {

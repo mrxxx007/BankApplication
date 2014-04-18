@@ -9,12 +9,14 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Sergey Popov on 06.04.14.
  */
 public class AccountDAOImpl implements AccountDAO {
 	private static AccountDAOImpl instance;
+	static Logger logger = Logger.getLogger(AccountDAOImpl.class.getName());
 
 	private AccountDAOImpl() {
 
@@ -56,6 +58,9 @@ public class AccountDAOImpl implements AccountDAO {
 				}
 				account.setId(resultSet.getInt(1));
 				resultSet.close();
+
+				logger.fine(String.format("The account [%s | %.2f] for client [%d] INSERTED in DB",
+						account.getAccountType(), account.getBalance(), clientId));
 				//System.out.println("accId after save = " + account.getId());
 				//account.setClientId(clientId);
 			} else {
@@ -72,6 +77,8 @@ public class AccountDAOImpl implements AccountDAO {
 				}
 				stmt.setInt(5, accId);
 				stmt.executeUpdate();
+				logger.fine(String.format("The account [%s | %.2f] for client [%d] UPDATED in DB",
+						account.getAccountType(), account.getBalance(), clientId));
 			}
 
 			if (stmt != null) {	stmt.close(); }
@@ -91,6 +98,7 @@ public class AccountDAOImpl implements AccountDAO {
 			stmt.setInt(1, id);
 			stmt.executeUpdate();
 			if (stmt != null) {	stmt.close(); }
+			logger.fine("All accounts for client [" + id + "] REMOVED from DB");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

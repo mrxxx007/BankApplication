@@ -11,12 +11,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.logging.Logger;
 
 /**
  * Created by Sergey Popov on 06.04.14.
  */
 public class BankDAOImpl implements BankDAO {
 	private static BankDAOImpl instance;
+	private static Logger logger = Logger.getLogger(BankDAO.class.getName());
 
 	private BankDAOImpl() {
 
@@ -45,11 +47,13 @@ public class BankDAOImpl implements BankDAO {
 			if (stmt != null) { stmt.close(); }
 		} catch (SQLException ex) {
 			ex.printStackTrace();
+
 			return null;
 		} finally {
 			baseDAO.closeConnection();
 		}
-
+		logger.fine(String.format("The bank [%d | %s] SELECTED from DB",
+				bank.getId(), bank.getName()));
         return bank;
     }
 

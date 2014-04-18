@@ -1,0 +1,86 @@
+Apr 18, 2014 4:51:17 PM com.luxoft.bankapp.dao.ClientDAOImpl save
+FINE: The client [270 | Test Ivanov 123 | null] INSERTED in DB
+Apr 18, 2014 4:51:17 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 4000.00] for client [270] INSERTED in DB
+Apr 18, 2014 4:51:18 PM com.luxoft.bankapp.dao.ClientDAOImpl findClientByName
+FINE: The client [266 | Test Ivanov 123 | null] SELECTED from DB
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection received [127.0.0.1]
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection received [127.0.0.1]
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection received [127.0.0.1]
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection received [127.0.0.1]
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection received [127.0.0.1]
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection received [127.0.0.1]
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection received [127.0.0.1]
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection received [127.0.0.1]
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection received [127.0.0.1]
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection received [127.0.0.1]
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.dao.ClientDAOImpl findClientByName
+FINE: The client [266 | Test Ivanov 123 | null] SELECTED from DB
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 3999.00] for client [266] UPDATED in DB
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection closed [127.0.0.1].  Work time: 686 ms
+Apr 18, 2014 4:51:19 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 3998.00] for client [266] UPDATED in DB
+Apr 18, 2014 4:51:20 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection closed [127.0.0.1].  Work time: 1039 ms
+Apr 18, 2014 4:51:20 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 3997.00] for client [266] UPDATED in DB
+Apr 18, 2014 4:51:20 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection closed [127.0.0.1].  Work time: 1422 ms
+Apr 18, 2014 4:51:20 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 3996.00] for client [266] UPDATED in DB
+Apr 18, 2014 4:51:20 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection closed [127.0.0.1].  Work time: 1654 ms
+Apr 18, 2014 4:51:20 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 3995.00] for client [266] UPDATED in DB
+Apr 18, 2014 4:51:21 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection closed [127.0.0.1].  Work time: 1950 ms
+Apr 18, 2014 4:51:21 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 3994.00] for client [266] UPDATED in DB
+Apr 18, 2014 4:51:21 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection closed [127.0.0.1].  Work time: 2336 ms
+Apr 18, 2014 4:51:21 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 3993.00] for client [266] UPDATED in DB
+Apr 18, 2014 4:51:21 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection closed [127.0.0.1].  Work time: 2690 ms
+Apr 18, 2014 4:51:21 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 3992.00] for client [266] UPDATED in DB
+Apr 18, 2014 4:51:22 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection closed [127.0.0.1].  Work time: 2975 ms
+Apr 18, 2014 4:51:22 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 3991.00] for client [266] UPDATED in DB
+Apr 18, 2014 4:51:22 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection closed [127.0.0.1].  Work time: 3827 ms
+Apr 18, 2014 4:51:23 PM com.luxoft.bankapp.dao.AccountDAOImpl save
+FINE: The account [s | 3990.00] for client [266] UPDATED in DB
+Apr 18, 2014 4:51:23 PM com.luxoft.bankapp.networking.BankServerThreaded run
+SEVERE: Server socket has been closed
+java.net.SocketException: socket closed
+	at java.net.DualStackPlainSocketImpl.accept0(Native Method)
+	at java.net.DualStackPlainSocketImpl.socketAccept(DualStackPlainSocketImpl.java:131)
+	at java.net.AbstractPlainSocketImpl.accept(AbstractPlainSocketImpl.java:398)
+	at java.net.PlainSocketImpl.accept(PlainSocketImpl.java:198)
+	at java.net.ServerSocket.implAccept(ServerSocket.java:530)
+	at java.net.ServerSocket.accept(ServerSocket.java:498)
+	at com.luxoft.bankapp.networking.BankServerThreaded.run(BankServerThreaded.java:66)
+	at java.lang.Thread.run(Thread.java:744)
+
+Apr 18, 2014 4:51:23 PM com.luxoft.bankapp.networking.ServerThread run
+INFO: Connection closed [127.0.0.1].  Work time: 4259 ms
+Apr 18, 2014 4:51:23 PM com.luxoft.bankapp.dao.ClientDAOImpl findClientByName
+FINE: The client [266 | Test Ivanov 123 | null] SELECTED from DB
+Apr 18, 2014 4:51:23 PM com.luxoft.bankapp.dao.AccountDAOImpl removeByClientId
+FINE: All accounts for client [266] REMOVED from DB
+Apr 18, 2014 4:51:23 PM com.luxoft.bankapp.dao.ClientDAOImpl remove
+FINE: The client [266 | Test Ivanov 123 | null] REMOVED from DB

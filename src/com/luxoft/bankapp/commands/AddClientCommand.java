@@ -1,5 +1,6 @@
 package com.luxoft.bankapp.commands;
 
+import com.luxoft.bankapp.exceptions.BankException;
 import com.luxoft.bankapp.exceptions.ClientExistsException;
 import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.exceptions.DataVerifyException;
@@ -69,30 +70,14 @@ public class AddClientCommand implements Command {
 	}
 
 	@Override
-	public void execute() throws IOException {
+	public void execute() throws IOException, DAOException, BankException {
 		System.out.println("   Adding new client\n");
-		try {
 			BankCommander.activeClient = getClientInfoDialog();
 			if (BankCommander.activeClient != null) {
 				ServiceFactory.getBankService().addClient(BankCommander.activeBank, BankCommander.activeClient);
-				//BankCommander.activeBank.addClient(BankCommander.activeClient);
 			}
 
-			//new ClientDAOImpl().save(BankCommander.activeClient);
 			ServiceFactory.getClientService().saveClientToDB(BankCommander.activeClient);
-		}
-		catch (DataVerifyException ex) {
-			System.out.println(ex.getMessage());
-		}
-		catch (IOException ex) {
-			System.out.println(ex.getMessage());
-			ex.printStackTrace();
-		}
-		catch (ClientExistsException ex) {
-			System.out.println(ex.getMessage());
-		} catch (DAOException ex) {
-			System.out.println(ex.getMessage());
-		}
 	}
 
 	@Override

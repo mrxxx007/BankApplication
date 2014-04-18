@@ -11,7 +11,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
@@ -44,7 +43,7 @@ public class BankServerThreadedTest {
 		Thread srvThread = new Thread(bankServerThreaded);
 		srvThread.start();
 
-		int threadsNum =30;
+		int threadsNum =10;
 		List<Future<Long>> threadsFuture = new ArrayList<>();
 		List<Thread> threads = new ArrayList<>(threadsNum);
 		for (int i = 0; i < threadsNum; i++) {
@@ -53,7 +52,7 @@ public class BankServerThreadedTest {
 
 			threads.add(new Thread(task));
 			threadsFuture.add(task);
-			threads.get(i).setName("thr-" + i);
+			//threads.get(i).setName("thr-" + i);
 		}
 		for (int i = 0; i < threadsNum; i++) {
 			threads.get(i).start();

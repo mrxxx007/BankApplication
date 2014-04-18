@@ -12,14 +12,9 @@ import com.luxoft.bankapp.service.ServiceFactory;
  */
 public class GetAccountsCommand implements Command {
 	@Override
-	public void execute() {
-		try {
-			if (BankCommander.activeClient == null) {
-				throw new NotFoundException("Active client not found. Please, find the client you need first");
-			}
-		} catch (NotFoundException e) {
-			System.out.println(e.getMessage());
-			return;
+	public void execute() throws NotFoundException {
+		if (BankCommander.activeClient == null) {
+			throw new NotFoundException("Active client not found. Please, find the client you need first");
 		}
 
 		int i = 0;

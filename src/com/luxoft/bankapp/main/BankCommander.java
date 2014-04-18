@@ -1,9 +1,8 @@
 package com.luxoft.bankapp.main;
 
 import com.luxoft.bankapp.commands.*;
+import com.luxoft.bankapp.exceptions.*;
 import com.luxoft.bankapp.service.ServiceFactory;
-import com.luxoft.bankapp.exceptions.ClientNotFoundException;
-import com.luxoft.bankapp.exceptions.DAOException;
 import com.luxoft.bankapp.model.Bank;
 import com.luxoft.bankapp.model.Client;
 
@@ -11,6 +10,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -21,6 +22,7 @@ public class BankCommander {
 	public static Bank activeBank;
     // Default bank
     private static String bankName = "My Bank";
+	static Logger logger = Logger.getLogger(BankCommander.class.getName());
 
 	private static int commandNum;
 	private static Map<String, Command> commands = new TreeMap<>(new Comparator<String>() {
@@ -99,16 +101,33 @@ public class BankCommander {
 				commands.get(commandString).execute();
 			} catch (NumberFormatException e) {
 				System.out.println("Please, enter correct number");
-				continue;
+				logger.info(e.getMessage());
+			} catch (NoEnoughFundsException e) {
+				System.out.println(e.getMessage());
+				logger.warning(e.getMessage());
 			} catch (IndexOutOfBoundsException e) {
 				System.out.println("The command not found");
-				continue;
+				logger.info("Command not found. " + e.getMessage());
 			} catch (IOException e) {
 				e.printStackTrace();
+				logger.log(Level.SEVERE, e.getMessage(), e);
 			} catch (ClientNotFoundException e) {
 				System.out.println(e.getMessage());
+				logger.info(e.getMessage());
+			} catch (NotFoundException e){
+				System.out.println(e.getMessage());
+				logger.info(e.getMessage());
 			} catch (DAOException e) {
 				System.out.println(e.getMessage());
+				logger.log(Level.SEVERE, e.getMessage(), e);
+			} catch (DataVerifyException e) {
+				System.out.println(e.getMessage());
+				logger.warning(e.getMessage());
+			} catch (ClientExistsException e) {
+				System.out.println(e.getMessage());
+				logger.warning(e.getMessage());
+			} catch (BankException e) {
+				logger.log(Level.SEVERE, e.getMessage(), e);
 			}
 		}
 	}

@@ -7,6 +7,7 @@ import com.luxoft.bankapp.model.Bank;
 import com.luxoft.bankapp.model.Client;
 import com.luxoft.bankapp.model.Gender;
 import com.luxoft.bankapp.service.ServiceFactory;
+import sun.rmi.runtime.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -14,12 +15,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 /**
  * Created by Sergey Popov on 06.04.14.
  */
 public class ClientDAOImpl implements ClientDAO {
 	private static ClientDAOImpl instance;
+	static Logger logger = Logger.getLogger(ClientDAOImpl.class.getName());
 
 	private ClientDAOImpl() {
 
@@ -60,7 +63,8 @@ public class ClientDAOImpl implements ClientDAO {
         } finally {
 			baseDAO.closeConnection();
 		}
-
+		logger.fine(String.format("The client [%d | %s | %s] SELECTED from DB",
+				client.getId(), client.getName(), client.getCity()));
         return client;
     }
 
@@ -94,6 +98,8 @@ public class ClientDAOImpl implements ClientDAO {
 			baseDAO.closeConnection();
 		}
 
+		logger.fine(String.format("The client [%d | %s | %s] SELECTED from DB",
+				client.getId(), client.getName(), client.getCity()));
         return client;
     }
 
@@ -140,6 +146,8 @@ public class ClientDAOImpl implements ClientDAO {
 		} finally {
 			baseDAO.closeConnection();
 		}
+
+		logger.fine("All clients SELECTED from DB");
         return clients;
     }
 
@@ -159,20 +167,21 @@ public class ClientDAOImpl implements ClientDAO {
 				}
 				client.setId(resultSet.getInt(1));
 				if (resultSet != null) { resultSet.close(); }
+				logger.fine(String.format("The client [%d | %s | %s] INSERTED in DB",
+						client.getId(), client.getName(), client.getCity()));
 			} else {
 				stmtClient = getQuery(QueryType.UPDATE, client, conn);
 				if (stmtClient.executeUpdate() == 0) {
 					throw new DAOException("Impossible to update Client in DB. Transaction is rolled back");
 				}
-
+				logger.fine(String.format("The client [%d | %s | %s] UPDATED in DB",
+						client.getId(), client.getName(), client.getCity()));
 			}
 			if (stmtClient != null) { stmtClient.close(); }
 
 			for (Account acc : client.getAccounts()) {
-				//System.out.println("Exec save acc");
 				ServiceFactory.getAccountDAO().save(acc, client.getId());
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -197,6 +206,8 @@ public class ClientDAOImpl implements ClientDAO {
 		} finally {
 			baseDAO.closeConnection();
 		}
+		logger.fine(String.format("The client [%d | %s | %s] REMOVED from DB",
+				client.getId(), client.getName(), client.getCity()));
 	}
 
     private enum QueryType {

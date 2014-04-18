@@ -67,6 +67,9 @@ public class Bank implements Report {
 		BankReport.getBankCreditSum(this);
 	}
 
+	public String getName() {
+		return name;
+	}
     public int getId() {
         return id;
     }
