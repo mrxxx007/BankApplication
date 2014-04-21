@@ -11,6 +11,35 @@ h1 {
     top: 0; left: 0; bottom: 0; right: 0;
 }
 
+.mac {
+    border: none;
+    border-radius: 20px;
+    padding: 5px 8px;
+    color: #333;
+    box-shadow:
+        inset 0 2px 0 rgba(0,0,0,.2),
+        0 0 4px rgba(0,0,0,0.1);
+}
+
+.field label {
+    float: left;
+    padding-right: 10px;
+}
+.field {
+    clear: both;
+    text-align: right;
+    line-height: 25px;
+}
+.mainField {float:left;}
+
+
+.mac:focus {
+    outline: none;
+    box-shadow:
+        inset 0 2px 0 rgba(0,0,0,.2),
+        0 0 4px rgba(0,0,0,0.1),
+        0 0 5px 1px #51CBEE;
+}
 
 #bankStatTable td {
 	border-bottom: 1px solid #EEE;
