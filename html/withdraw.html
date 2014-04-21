@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Withdrawing</title>
+    <script src="js/jquery-2.1.0.min.js" type="text/javascript"></script>
+    <script src="js/validation.js" type="text/javascript"></script>
+</head>
+<body>
+    Enter sum you want to withdraw:
+    <form action="menu.html">
+        <input type="text" id="summ" name="summValue"><div id="nameError"></div>
+        <input type="submit" onclick="return isNumeric(summ.value);" value="Submit">
+    </form>
+</body>
+</html>

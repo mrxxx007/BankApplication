@@ -1,0 +1,43 @@
+h1 {
+	text-align: center;
+}
+
+.centerDiv {
+	width: 250px;
+    height: 200px;
+    overflow: auto;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+}
+
+
+#bankStatTable td {
+	border-bottom: 1px solid #EEE;
+}
+
+#results {
+	width: 75%;
+	margin: auto;
+}
+#results td {
+	border: 1px solid #AAA;
+	font-weight:bold;
+	padding: 3px;
+}
+#results th {
+	border: 1px solid #AAA;
+	font-weight:bold;
+	padding: 2px;
+	background: #EEE;
+}
+
+
+#menu td {
+	padding: 30px;
+	border: 1px solid black;
+	color: red;
+	font-weight: bold;
+	text-align: center;
+	cursor: hand;
+}
