@@ -5,49 +5,114 @@
     <title>Adding new client</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="js/jquery-2.1.0.min.js" type="text/javascript"></script>
+    <script src="js/addClientScript.js" type="text/javascript"></script>
+    <script src="js/validation.js" type="text/javascript"></script>
+
     <script type="text/javascript">
 
     </script>
 </head>
 <body>
-<h1>Adding new client</h1>
-<div class="mainField">
-    <div class="field">
-        <label for="name">Full name: </label>
-        <input type="text" id="name" class="mac" />
-    </div>
-    <div class="field">
-        <label for="city">City: </label>
-        <input type="text" id="city" class="mac"/>
-    </div>
-    <div class="field">
-        <label>Gender: </label>
-        <input type="radio" name="gender" value="Male"> Male &nbsp;&nbsp;&nbsp;
-        <input type="radio" name="gender" value="Female"> Female
-    </div>
-    <div class="field">
-        <label for="email">E-mail: </label>
-        <input type="text" id="email" class="mac"/>
-    </div>
-    <div class="field">
-        <label for="phone">Phone: </label>
-        <input type="text" id="phone" class="mac"/>
-    </div>
-    <div class="field">
-        <label>Accounts: </label>
-        <input type="checkbox" id="creditCheck" onclick="$('#checkBalance').show();"/> Open credit account
-    </div>
-    <div hidden="true" id="checkBalance">hello</div>
-    <div class="field">
-        <label>  </label>
-        <input type="checkbox" id="savingCheck"/> Open saving account
-    </div>
+    <h1>Adding new client</h1>
+    <h3>Fill the form to add a new client</h3>
+    <form action="login.html" id="addClientForm">
+        <table class="formTable" align="center">
+            <tr>
+                <td>
+                    <label for="name">Full name: </label>
+                </td>
+                <td>
+                    <input type="text" id="name" />
+                </td>
+                <td id="nameError" class="formErrorText"></td>
+            </tr>
 
-    <div class="field">
-        <label for="creditInitBalance">Initial balance for credit acc: <br></label>
-        <input type="text" id="creditInitBalance" class="mac"/>
-    </div>
-</div>
+            <tr>
+                <td>
+                    <label for="city">City: </label>
+                </td>
+                <td>
+                    <input type="text" id="city"/>
+                </td>
+                <td id="cityError" class="formErrorText"></td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label>Gender: </label>
+                </td>
+                <td>
+                    <input type="radio" name="gender" value="Male" id="genderM"> Male &nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="gender" value="Female" id="genderF"> Female
+                </td>
+                <td id="genderError" class="formErrorText"></td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="email">E-mail: </label>
+                </td>
+                <td>
+                    <input type="text" id="email"/>
+                </td>
+                <td id="emailError" class="formErrorText"></td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="phone">Phone: </label>
+                </td>
+                <td>
+                    <input type="text" id="phone"/>
+                </td>
+                <td id="phoneError" class="formErrorText"></td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="creditCheck">Credit account: </label>
+                </td>
+                <td>
+                    <input type="checkbox" id="creditCheck" onclick="showDivByCheckbox(this, creditBalanceRow);"/> Open credit account
+                </td>
+            </tr>
+            <tr hidden="true" id="creditBalanceRow">
+                <td>
+                    <label for="creditInitBalance">&nbsp;&nbsp;Initial balance:</label>
+                </td>
+                <td>
+                    <input type="text" id="creditInitBalance"/>
+                </td>
+                <td id="errorCreditInitBalance" class="formErrorText"></td>
+            </tr>
+
+            <tr>
+                <td>
+                    <label for="savingCheck">Credit account: </label>
+                </td>
+                <td>
+                    <input type="checkbox" id="savingCheck" onclick="showDivByCheckbox(this, savingBalanceRow);"/> Open credit account
+                </td>
+            </tr>
+            <tr hidden="true" id="savingBalanceRow">
+                <td>
+                    <label for="savingInitBalance">&nbsp;&nbsp;Initial balance:</label>
+                </td>
+                <td>
+                    <input type="text" id="savingInitBalance"/>
+                </td>
+                <td id="errorSavingInitBalance" class="formErrorText"></td>
+            </tr>
+
+            <tfoot>
+                <tr>
+                    <td colspan="3">
+                        <input type="submit" value="Add client" onclick="return checkForm();" style="width:50%">
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
 
 </body>
 </html>
